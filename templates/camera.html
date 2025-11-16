@@ -78,6 +78,16 @@
             align-items: center;
         }
 
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
         .nav-link {
             color: rgba(255, 255, 255, 0.8);
             text-decoration: none;
@@ -123,6 +133,17 @@
             border: 5px solid white;
             cursor: pointer;
             margin: 1rem auto;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0, 255, 136, 0.4);
+        }
+
+        .capture-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(0, 255, 136, 0.6);
+        }
+
+        .capture-btn:active {
+            transform: scale(0.95);
         }
 
         .result-section {
@@ -156,14 +177,27 @@
             transition: all 0.3s ease;
         }
 
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
         .learn-btn {
             background: var(--primary);
             color: white;
         }
 
+        .learn-btn:hover {
+            background: var(--secondary);
+        }
+
         .add-btn {
             background: var(--neon);
             color: var(--dark);
+        }
+
+        .add-btn:hover {
+            background: #00dd77;
         }
 
         .loading {
@@ -200,6 +234,30 @@
             
             .nav-links {
                 display: none;
+                position: fixed;
+                top: 80px;
+                left: 0;
+                right: 0;
+                background: rgba(15, 23, 42, 0.98);
+                flex-direction: column;
+                padding: 2rem;
+                gap: 1.5rem;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+
+            .camera-container {
+                height: 50vh;
             }
         }
     </style>
@@ -208,13 +266,15 @@
     <!-- Navigation Bar -->
     <nav class="nav-bar">
         <div class="nav-logo">
-            <img src="https://raw.githubusercontent.com/kickiniteasy/bolt-hackathon-badge/3f09b71855feb7d3c02ed170ccae764b842cf4ce/src/public/bolt-badge/white_circle_360x360/white_circle_360x360.svg" alt="Bolt.new" class="bolt-logo" onclick="window.open('https://bolt.new', '_blank')">
             <div class="nav-title">Text Capture</div>
         </div>
-        <div class="nav-links">
-            <a href="index.html" class="nav-link">Home</a>
-            <a href="materials.html" class="nav-link">Materials</a>
-            <a href="scheduler.html" class="nav-link">Schedule</a>
+        <button class="mobile-menu-btn" id="mobileMenuBtn">
+            <i class="fas fa-bars"></i>
+        </button>
+        <div class="nav-links" id="navLinks">
+            <a href="/" class="nav-link">Home</a>
+            <a href="/materials.html" class="nav-link">Materials</a>
+            <a href="/scheduler.html" class="nav-link">Schedule</a>
         </div>
     </nav>
 
@@ -249,6 +309,19 @@
     </div>
 
     <script>
+        // Mobile Menu Toggle
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const navLinks = document.getElementById('navLinks');
+        
+        if (mobileMenuBtn) {
+            mobileMenuBtn.addEventListener('click', () => {
+                navLinks.classList.toggle('active');
+                const icon = mobileMenuBtn.querySelector('i');
+                icon.classList.toggle('fa-bars');
+                icon.classList.toggle('fa-times');
+            });
+        }
+
         // Camera elements
         const cameraView = document.getElementById('camera-view');
         const captureBtn = document.getElementById('capture-btn');
@@ -335,8 +408,8 @@ Would you like to save the black and white video permanently?`;
 
         // Action buttons
         document.getElementById('learn-btn').addEventListener('click', () => {
-          redirect("imagegen AI .html")
-           const materialData = {
+            redirect("/shorts.html");
+            const materialData = {
             id: Date.now(),
             image: capturedImage,
             content: extractedContent,
@@ -347,23 +420,24 @@ Would you like to save the black and white video permanently?`;
         };
         
          //localStorage.setItem('newCameraMaterial', JSON.stringify(materialData));
-             window.location.href = `shorts.html?question=${extractedContent}`;
+             window.location.href = `/shorts.html?question=${encodeURIComponent(extractedContent)}`;
         });
 
         document.getElementById('add-btn').addEventListener('click', () => {
-        const materialData = {
-            id: Date.now(),
-            image: capturedImage,
-            content: extractedContent,
-            filename: `capture-${Date.now()}.jpg`,
-            type: 'theory',
-            deadline: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-            progress: 30
-        };
-        
-         localStorage.setItem('newCameraMaterial', JSON.stringify(materialData));
-         window.location.href = 'materials.html'
-    });
+            const materialData = {
+                id: Date.now(),
+                title: `Captured Material - ${new Date().toLocaleDateString()}`,
+                image: capturedImage,
+                content: extractedContent,
+                filename: `capture-${Date.now()}.jpg`,
+                type: 'theory',
+                deadline: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                progress: 0
+            };
+            
+            localStorage.setItem('newCameraMaterial', JSON.stringify(materialData));
+            window.location.href = '/materials.html';
+        });
         // Initialize camera when page loads
         window.addEventListener('DOMContentLoaded', startCamera);
     </script>

@@ -660,13 +660,12 @@
     <!-- Navigation Bar -->
     <nav class="nav-bar">
         <div class="nav-logo">
-            <img src="https://raw.githubusercontent.com/kickiniteasy/bolt-hackathon-badge/3f09b71855feb7d3c02ed170ccae764b842cf4ce/src/public/bolt-badge/white_circle_360x360/white_circle_360x360.svg" alt="Bolt.new" class="bolt-logo" onclick="window.open('https://bolt.new', '_blank')">
             <div class="nav-title">Interactive Learning</div>
         </div>
         <div class="nav-links">
-            <a href="index.html" class="nav-link">Home</a>
-            <a href="materials.html" class="nav-link">Materials</a>
-            <a href="scheduler.html" class="nav-link">Schedule</a>
+            <a href="/" class="nav-link">Home</a>
+            <a href="/materials.html" class="nav-link">Materials</a>
+            <a href="/scheduler.html" class="nav-link">Schedule</a>
         </div>
     </nav>
 
@@ -1001,7 +1000,7 @@
         
         // Robust JSON parser that can handle large responses
         function parseLargeJsonResponse(text) {
-            console.log(`this is the responce from api :${text}`)
+            console.log(`This is the response from API: ${text}`)
             try {
                 // First try standard parsing
                 return JSON.parse(text);

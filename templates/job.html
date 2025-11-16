@@ -211,12 +211,36 @@
             flex: 1;
             min-width: 200px;
             padding: 12px 20px;
-            border: none;
+            border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 50px;
             background: rgba(255, 255, 255, 0.1);
             color: white;
             font-size: 1rem;
             outline: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            appearance: none;
+            background-image: url('data:image/svg+xml;utf8,<svg fill="white" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 20px;
+            padding-right: 45px;
+        }
+
+        .filter-select:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .filter-select:focus {
+            border-color: var(--neon);
+            box-shadow: 0 0 0 2px rgba(0, 255, 136, 0.2);
+        }
+
+        .filter-select option {
+            background: var(--dark);
+            color: white;
+            padding: 10px;
         }
 
         /* Results Section */
@@ -233,13 +257,35 @@
         }
 
         .sort-select {
-            padding: 10px 15px;
-            border: none;
+            padding: 10px 35px 10px 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 50px;
             background: rgba(255, 255, 255, 0.1);
             color: white;
             font-size: 1rem;
             outline: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            appearance: none;
+            background-image: url('data:image/svg+xml;utf8,<svg fill="white" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 18px;
+        }
+
+        .sort-select:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .sort-select:focus {
+            border-color: var(--neon);
+            box-shadow: 0 0 0 2px rgba(0, 255, 136, 0.2);
+        }
+
+        .sort-select option {
+            background: var(--dark);
+            color: white;
         }
 
         .job-grid {
@@ -400,21 +446,39 @@
             position: relative;
         }
 
+        .saved-jobs-dropdown > a {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
         .dropdown-content {
             display: none;
             position: absolute;
-            top: 100%;
+            top: calc(100% + 10px);
             right: 0;
-            background: rgba(40, 41, 62, 0.95);
-            min-width: 300px;
+            background: rgba(30, 31, 48, 0.98);
+            min-width: 320px;
             max-height: 400px;
             overflow-y: auto;
-            border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            z-index: 100;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             padding: 10px;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .dropdown-content.show {
@@ -426,10 +490,17 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             cursor: pointer;
             transition: all 0.3s;
+            border-radius: 8px;
+            margin-bottom: 5px;
+        }
+
+        .saved-job-item:last-child {
+            border-bottom: none;
         }
 
         .saved-job-item:hover {
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(0, 255, 136, 0.1);
+            transform: translateX(5px);
         }
 
         .saved-job-title {
@@ -452,13 +523,20 @@
         .view-all-btn {
             display: block;
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             text-align: center;
-            background: rgba(0, 255, 136, 0.1);
+            background: rgba(0, 255, 136, 0.15);
             color: var(--neon);
-            border-radius: 5px;
+            border-radius: 8px;
             margin-top: 10px;
             text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .view-all-btn:hover {
+            background: rgba(0, 255, 136, 0.25);
+            transform: translateY(-2px);
         }
 
         /* Pagination */
@@ -589,6 +667,17 @@
                 width: 50px;
                 height: 50px;
             }
+
+            .dropdown-content {
+                right: auto;
+                left: 0;
+                min-width: 280px;
+                max-width: 90vw;
+            }
+
+            .filter-select {
+                min-width: 100%;
+            }
         }
     </style>
 </head>
@@ -599,13 +688,12 @@
     <div class="container">
         <header>
             <div class="logo">
-                <img src="https://raw.githubusercontent.com/kickiniteasy/bolt-hackathon-badge/3f09b71855feb7d3c02ed170ccae764b842cf4ce/src/public/bolt-badge/white_circle_360x360/white_circle_360x360.svg" alt="Bolt.new" class="bolt-logo" onclick="window.open('https://bolt.new', '_blank')">
                 <i class="fas fa-briefcase"></i>
                 <span>JobFinder</span>
             </div>
             <nav>
                 <ul>
-                    <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="/"><i class="fas fa-home"></i> Home</a></li>
                     <li class="saved-jobs-dropdown">
                         <a href="#" id="savedJobsBtn"><i class="fas fa-bookmark"></i> Saved Jobs <i class="fas fa-caret-down"></i></a>
                         <div class="dropdown-content" id="savedJobsDropdown">

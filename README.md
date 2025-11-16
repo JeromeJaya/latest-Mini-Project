@@ -1,187 +1,195 @@
-Here's a comprehensive, well-structured `README.md` for your AI Learn Flow project, tailored to the GitHub repository structure:
+# VisioLearn AI - Interactive Learning Platform
 
-```markdown
-# 🚀 AI Learn Flow: AI-Powered Adaptive Learning Platform
+A comprehensive AI-powered educational platform that transforms traditional study materials into interactive, visual learning experiences.
 
-**Transform static study materials into dynamic, personalized learning experiences with storytelling, spaced repetition, and real-time career alignment.**
+## Features
 
-[![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=flat&logo=fastapi)](https://fastapi.tiangolo.com/)
-[![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=flat&logo=firebase&logoColor=black)](https://firebase.google.com/)
-[![Bolt.new](https://img.shields.io/badge/Bolt.new-5E17EB?style=flat)](https://bolt.new)
+### 📚 Core Learning Tools
 
-## 🌟 Inspiration
-Witnessing students struggle with rote memorization and disconnected learning inspired AI Learn Flow. Key insights driving our solution:
-- 70% of learners forget material within 24 hours of exams
-- Existing resources fail to leverage cognitive science principles
-- Career relevance is missing from traditional study tools
-- Storytelling improves memory retention by 65% (Journal of Applied Research in Memory & Cognition)
+- **Interactive Learning Stories** - Transform text content into engaging visual narratives
+- **Smart Scheduler** - AI-powered study planning with personalized daily segments
+- **Material Management** - Upload, organize, and track study materials
+- **AI Quiz Generator** - Auto-generate quizzes from your study content
+- **Progress Dashboard** - Visualize learning consistency and completion rates
 
-Our platform combines **cognitive psychology**, **generative AI**, and **real-time job market data** to create purpose-driven, engaging learning experiences that connect education to career opportunities.
+### 🎯 Additional Features
 
-## ✨ Key Features
-### 🤖 AI-Powered Content Transformation
-- Upload PDFs/DOCX → Convert into interactive learning formats:
-  - Genre-based stories (e.g., "Chemistry concepts as fantasy adventures")
-  - Anki-style flashcards with cloze deletion
-  - Mind maps showing concept relationships
-- Customizable output based on interests/hobbies
+- **Text Capture** - Extract text from images using camera
+- **Job Finder** - Search and save job listings in India
+- **AI Assistant** - Chat with AI about your progress and schedule
+- **Image Generator** - Create visual aids for learning
 
-### 🔁 Intelligent Scheduling System
-- Spaced repetition algorithm (Leitner System)
-- Automatic document chunking into 15-minute daily tasks
-- Progress-adaptive difficulty adjustment
+## Tech Stack
 
-### 📊 Career-Aligned Dashboard
-- Real-time job market scraping (LinkedIn/Unstop)
-- Skill gap analysis with personalized recommendations
-- Visual progress tracking (streaks, mastery radials, heatmaps)
+- **Backend:** FastAPI (Python)
+- **Frontend:** HTML5, CSS3, JavaScript
+- **AI Integration:** NVIDIA API (Llama 3.1), OpenAI-compatible endpoints
+- **APIs:** JSearch (Jobs), RapidAPI services
 
-### 🧠 AI Tutor Assistant
-- Context-aware Q&A ("Explain quantum physics using Marvel analogies")
-- Sentiment-responsive support (detects frustration/confidence)
-- Motivation engine with achievement badges
-
-## 🛠️ Technology Stack
-### Backend Services
-- **Core Framework**: FastAPI (Python) with async endpoints
-- **AI Integration**:
-  - OpenAI GPT-4 for narrative generation
-  - DeepSeek LLM for concept summarization
-  - Custom prompt engineering pipelines
-- **Database**: Firebase Realtime DB (User auth + storage)
-- **Scraping**: BeautifulSoup + Selenium (Job market data)
-- **DevOps**: Bolt.new for CI/CD + Google Cloud Run deployment
-
-### Frontend Implementation
-- **Templates**: Jinja2-rendered HTML in `/templates` directory
-- **Core Technologies**:
-  - Vanilla JavaScript (ES6+) for dynamic UIs
-  - Chart.js for data visualization
-  - Responsive CSS (Mobile-first design)
-- **Key Templates**:
-  - `index.html`: Main landing page with upload functionality
-  - `dashboard.html`: Interactive learning analytics hub
-  - `story_view.html`: Immersive storytelling interface
-  - `flashcards.html`: Spaced repetition drill system
-
-## 🚀 Installation Guide
+## Installation
 
 ### Prerequisites
-- Python 3.10+
-- Firebase project with Realtime Database
-- OpenAI API key
 
-### Setup Instructions
-```bash
-# Clone repository
-git clone https://github.com/JeromeJaya/latest-mini-project.git
-cd latest-mini-project
+- Python 3.8 or higher
+- pip (Python package manager)
 
-# Create virtual environment
-python -m venv venv
-source venv/bin/activate  # Linux/Mac
-venv\Scripts\activate     # Windows
+### Setup
 
-# Install dependencies
-pip install -r requirements.txt
+1. **Clone the repository**
 
-# Configure environment variables
-echo "OPENAI_API_KEY=your_api_key" >> .env
-echo "FIREBASE_CONFIG=firebase_config.json" >> .env
+   ```bash
+   git clone <repository-url>
+   cd latest-mini-project
+   ```
 
-# Run FastAPI server
-uvicorn main:app --reload
-```
+2. **Install dependencies**
 
-### Firebase Configuration
-1. Create new Firebase project at [console.firebase.google.com](https://console.firebase.google.com/)
-2. Download `firebase_config.json` to project root
-3. Enable authentication methods (Email/Google)
+   ```bash
+   pip install fastapi uvicorn python-multipart jinja2 openai
+   ```
 
-## 📂 Project Structure
+3. **Run the application**
+
+   ```bash
+   uvicorn txtToTxt:app --reload --host 0.0.0.0 --port 8000
+   ```
+
+4. **Access the application**
+   - Open your browser and navigate to: `http://localhost:8000`
+
+## Usage
+
+### Materials Management
+
+1. Navigate to the home page
+2. Click "Manage My Learning materials" or go to `/materials.html`
+3. Upload files (PDF, DOCX, TXT, etc.) or manually add materials
+4. Organize by type: Theory, Diagrammatic, Problematic, Programming
+
+### Study Scheduler
+
+1. Go to `/scheduler.html`
+2. Add tasks with deadlines and priorities
+3. View AI-generated learning segments
+4. Track progress on calendar view
+
+### Interactive Learning
+
+1. Select a material from your collection
+2. Click "Learn" to start interactive learning
+3. Generate visual story slides from content
+4. Use voice narration and toggle between original/story modes
+
+### Quiz Generation
+
+1. Complete learning segments in the scheduler
+2. Click "Take Quiz" on completed tasks
+3. AI generates 10 multiple-choice questions
+4. Review results and track scores
+
+### Job Search
+
+1. Navigate to `/job.html`
+2. Search for jobs by keywords and location
+3. Filter by employment type and posting date
+4. Save jobs for later review
+
+## Project Structure
+
 ```
 latest-mini-project/
-├── templates/                  # Frontend templates
-│   ├── index.html              # Main upload interface
-│   ├── dashboard.html          # Learning analytics dashboard
-│   ├── story_view.html         # Interactive story player
-│   ├── flashcards.html         # Flashcard practice system
-│   └── auth/                   # Authentication templates
-│       ├── login.html
-│       └── register.html
-├── static/                     # Static assets
-│   ├── css/                    # Stylesheets
-│   ├── js/                     # JavaScript modules
-│   └── images/                 # Brand assets
-├── main.py                     # FastAPI application core
-├── ai_processing.py            # LLM integration module
-├── firebase_utils.py           # Database operations
-├── scraper.py                  # Job market data collector
-├── scheduler.py                # Spaced repetition engine
-└── requirements.txt            # Python dependencies
+├── txtToTxt.py           # Main FastAPI application
+├── templates/            # HTML templates
+│   ├── index.html        # Home page
+│   ├── materials.html    # Material management
+│   ├── scheduler.html    # Study planner
+│   ├── shorts.html       # Interactive learning
+│   ├── quiz.html         # Quiz interface
+│   ├── dashboard.html    # Progress tracking
+│   ├── job.html          # Job finder
+│   ├── camera.html       # Text capture
+│   ├── assistant.html    # AI assistant
+│   └── ...               # Other templates
+└── .gitignore           # Git ignore rules
 ```
 
-## 💡 Usage Workflow
-1. **Account Creation**
-   - Register via email/Google at `/auth/register`
-   - Complete onboarding survey (interests/career goals)
+## API Configuration
 
-2. **Content Transformation**
-   - Upload study materials at `/index`
-   - Select output formats (Stories/Flashcards/Mindmaps)
-   - Customize parameters (genre, complexity, length)
+The application uses the following APIs:
 
-3. **Learning Management**
-   - Daily tasks appear in dashboard
-   - Interact with AI-generated content
-   - Track progress via analytics dashboard
+- **NVIDIA API**: For AI chat and content generation
+- **JSearch API**: For job listings (via RapidAPI)
+- **OpenAI-compatible endpoints**: For various AI features
 
-4. **Career Alignment**
-   - View relevant job opportunities
-   - Identify skill gaps
-   - Adjust learning focus based on market demand
+API keys are configured in the respective template files. Update them as needed.
 
-## 🌈 Future Roadmap
-### Q3 2024
-- **AI Resume Builder**: Auto-generate resumes from learning achievements
-- **Offline PWA**: Service worker caching for offline access
+## Features Details
 
-### Q4 2024
-- **Collaboration Hub**: Real-time group study spaces
-- **Skill Certification**: Verifiable digital credentials
+### Smart Scheduler
 
-### Q1 2025
-- **Mobile Applications**: iOS/Android native ports
-- **Voice Interaction**: Voice-controlled learning assistant
+- Calendar view with drag-and-drop tasks
+- AI-generated daily learning segments
+- Progress tracking and statistics
+- Time-based task organization
+- Deadline notifications
 
-## 🤝 Contributing
-We welcome contributions! Please follow these steps:
+### Interactive Learning
+
+- Story mode: Transforms content into narrative format
+- Image generation for visual aids
+- Voice narration support
+- Progress tracking per slide
+- Toggle between original and story content
+
+### Material Management
+
+- File upload support (PDF, DOCX, TXT, PY, etc.)
+- Automatic content extraction
+- Deadline tracking
+- Progress visualization
+- Schedule generation from materials
+
+### Dashboard Analytics
+
+- Study consistency charts
+- Material completion rates
+- Job-specific progress tracking
+- Motivational quotes with voice
+- 3D progress visualization
+
+## Browser Compatibility
+
+- Chrome (Recommended)
+- Firefox
+- Edge
+- Safari
+
+## Local Storage
+
+The application uses browser localStorage to save:
+
+- Study materials
+- Learning schedules
+- Quiz results
+- Saved jobs
+- User preferences
+
+## Contributing
+
 1. Fork the repository
-2. Create feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit changes (`git commit -m 'Add amazing feature'`)
-4. Push to branch (`git push origin feature/amazing-feature`)
-5. Open Pull Request
+2. Create a feature branch
+3. Commit your changes
+4. Push to the branch
+5. Open a Pull Request
 
-## 📜 License
-Distributed under the MIT License. See `LICENSE` for more information.
+## License
+
+This project is open source and available under the MIT License.
+
+## Support
+
+For issues, questions, or suggestions, please open an issue on the repository.
 
 ---
-**Connect**: [jeromejaya@example.com](mailto:jeromejaya@example.com) | [Project Documentation](https://ailearnflow.docs.example.com)
-```
 
-Key features of this README:
-1. **Template-Centric Structure**: Highlights the `/templates` directory organization and purpose
-2. **Visual Hierarchy**: Uses badges, emojis, and clear section headers
-3. **Technical Precision**: Includes exact implementation details for:
-   - FastAPI-Firebase integration
-   - Template rendering workflow
-   - AI processing pipeline
-4. **Developer-Ready**: 
-   - Complete installation instructions
-   - Environment setup guidance
-   - Dependency management
-5. **Visual Project Structure**: Clear directory tree showing template relationships
-6. **Usage Scenarios**: Step-by-step workflow for different user roles
-7. **Future-Proof**: Maps upcoming features to timeline quarters
-
-The README is optimized for both technical evaluators (showing implementation depth) and end users (demonstrating value proposition). It balances project vision with executable technical details.
+**Built with ❤️ for learners everywhere**
