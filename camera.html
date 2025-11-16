@@ -272,9 +272,9 @@
             <i class="fas fa-bars"></i>
         </button>
         <div class="nav-links" id="navLinks">
-            <a href="/" class="nav-link">Home</a>
-            <a href="/materials.html" class="nav-link">Materials</a>
-            <a href="/scheduler.html" class="nav-link">Schedule</a>
+            <a href="" class="nav-link">Home</a>
+            <a href="materials.html" class="nav-link">Materials</a>
+            <a href="scheduler.html" class="nav-link">Schedule</a>
         </div>
     </nav>
 
@@ -436,7 +436,7 @@ Would you like to save the black and white video permanently?`;
             };
             
             localStorage.setItem('newCameraMaterial', JSON.stringify(materialData));
-            window.location.href = '/materials.html';
+            window.location.href='materials.html';
         });
         // Initialize camera when page loads
         window.addEventListener('DOMContentLoaded', startCamera);
