@@ -1,0 +1,1435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Learning - VisioLearn</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            color: white;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 30px 0;
+            position: relative;
+            z-index: 10;
+        }
+        
+        h1 {
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+            background: linear-gradient(45deg, #ff8a00, #e52e71, #22c1c3);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.8;
+            max-width: 700px;
+            margin: 0 auto 30px;
+        }
+        
+        /* Chat Interface */
+        .chat-container {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            margin: 30px auto;
+            max-width: 700px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        #chat-messages {
+            height: 300px;
+            overflow-y: auto;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 12px;
+            background: rgba(0, 0, 0, 0.2);
+        }
+        
+        .message {
+            padding: 12px 15px;
+            margin-bottom: 15px;
+            border-radius: 18px;
+            max-width: 80%;
+            animation: fadeIn 0.3s ease-out;
+            position: relative;
+        }
+        
+        .user-message {
+            background: linear-gradient(90deg, #4e54c8, #8f94fb);
+            margin-left: auto;
+            border-bottom-right-radius: 5px;
+        }
+        
+        .ai-message {
+            background: rgba(255, 255, 255, 0.15);
+            margin-right: auto;
+            border-bottom-left-radius: 5px;
+        }
+        
+        .input-group {
+            display: flex;
+            gap: 10px;
+        }
+        
+        #user-input {
+            flex: 1;
+            padding: 15px 20px;
+            border: none;
+            border-radius: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s;
+        }
+        
+        #user-input:focus {
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 0 2px rgba(142, 68, 173, 0.5);
+        }
+        
+        #user-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        #send-button {
+            background: linear-gradient(45deg, #6a11cb, #2575fc);
+            border: none;
+            border-radius: 50px;
+            color: white;
+            padding: 0 30px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        #send-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(37, 117, 252, 0.4);
+        }
+        
+        #send-button:active {
+            transform: translateY(1px);
+        }
+        
+        #typing-indicator {
+            text-align: center;
+            padding: 10px;
+            font-style: italic;
+            opacity: 0.8;
+            display: none;
+        }
+        
+        /* Content Toggle */
+        .content-toggle {
+            position: fixed;
+            top: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 15px 25px;
+            border-radius: 50px;
+            display: none;
+            align-items: center;
+            gap: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .toggle-label {
+            font-size: 1rem;
+            font-weight: 500;
+        }
+        
+        .toggle-label.active {
+            color: #ff8a00;
+        }
+        
+        .toggle-switch {
+            position: relative;
+            width: 60px;
+            height: 30px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .toggle-switch.active {
+            background: linear-gradient(45deg, #ff8a00, #e52e71);
+        }
+        
+        .toggle-slider {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 24px;
+            height: 24px;
+            background: white;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+        
+        .toggle-switch.active .toggle-slider {
+            transform: translateX(30px);
+        }
+        
+        /* Story Slides */
+        .story-slides {
+            display: none;
+            position: relative;
+            height: 100vh;
+            overflow: hidden;
+            scroll-snap-type: y mandatory;
+            scroll-behavior: smooth;
+        }
+        
+        .slide {
+            height: 100vh;
+            width: 100%;
+            scroll-snap-align: start;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            transition: transform 0.8s ease-in-out;
+            overflow: hidden;
+        }
+        
+        .slide-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 1;
+        }
+        
+        .slide-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            padding: 20px;
+            max-width: 800px;
+            opacity: 0;
+            transform: translateY(50px);
+            animation: slideUp 0.8s forwards 0.5s;
+        }
+        
+        .slide-title {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+        
+        .slide-story {
+            font-size: 1.8rem;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.4);
+            padding: 20px;
+            border-radius: 15px;
+            backdrop-filter: blur(5px);
+        }
+        
+        .slide-id {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            font-size: 1.5rem;
+            background: rgba(0, 0, 0, 0.6);
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-weight: bold;
+        }
+        
+        .nav-dots {
+            position: fixed;
+            right: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .dot {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.4);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .dot.active {
+            background: white;
+            transform: scale(1.3);
+        }
+        
+        .back-btn {
+            position: fixed;
+            top: 30px;
+            left: 30px;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            transition: all 0.3s;
+            backdrop-filter: blur(5px);
+        }
+        
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+        
+        .progress-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #ff8a00, #e52e71);
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+        
+        .credit {
+            position: absolute;
+            bottom: 15px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-size: 0.8rem;
+            opacity: 0.7;
+            z-index: 3;
+        }
+        
+        .warning {
+            background: rgba(255, 165, 0, 0.2);
+            border-left: 4px solid #ffa500;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+            display: none;
+        }
+        
+        /* Material Info Display */
+        .material-info {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .material-title {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: #22c1c3;
+        }
+        
+        .material-type {
+            display: inline-block;
+            background: rgba(34, 193, 195, 0.2);
+            color: #22c1c3;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+        
+        .content-preview {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 10px;
+            max-height: 150px;
+            overflow-y: auto;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+        
+        /* Auto-generate button */
+        .auto-generate-btn {
+            background: linear-gradient(45deg, #ff8a00, #e52e71);
+            border: none;
+            border-radius: 50px;
+            color: white;
+            padding: 15px 30px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .auto-generate-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(255, 138, 0, 0.3);
+        }
+        
+        /* Image Loading Indicator */
+        .image-loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            z-index: 10;
+        }
+        
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid #ff8a00;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .loading-text {
+            color: white;
+            font-size: 1rem;
+        }
+        
+        /* Voice indicator */
+        .voice-indicator {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            padding: 10px 20px;
+            border-radius: 25px;
+            display: none;
+            align-items: center;
+            gap: 10px;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .voice-indicator.speaking {
+            display: flex;
+        }
+        
+        .voice-wave {
+            width: 4px;
+            height: 20px;
+            background: #ff8a00;
+            margin: 0 1px;
+            border-radius: 2px;
+            animation: voice-wave 1.5s ease-in-out infinite;
+        }
+        
+        .voice-wave:nth-child(2) { animation-delay: 0.1s; }
+        .voice-wave:nth-child(3) { animation-delay: 0.2s; }
+        .voice-wave:nth-child(4) { animation-delay: 0.3s; }
+        
+        @keyframes voice-wave {
+            0%, 100% { height: 10px; }
+            50% { height: 20px; }
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes slideUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+                /* Navigation Bar */
+        .nav-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(15, 23, 42, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .bolt-logo {
+            width: 80px;
+            height: 80px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 50%;
+            box-shadow: 0 2px 10px rgba(255, 255, 255, 0.1);
+        }
+
+        .bolt-logo:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 20px rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #00ff88, #6366f1);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+        }
+
+        .nav-link:hover {
+            color: #00ff88;
+            background: rgba(0, 255, 136, 0.1);
+        }
+        
+
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5rem; }
+            .slide-title { font-size: 2rem; }
+            .slide-story { font-size: 1.4rem; }
+            .chat-container { padding: 15px; }
+            #chat-messages { height: 250px; }
+            .input-group { flex-direction: column; }
+            #send-button { padding: 15px; }
+            .content-toggle {
+                top: 80px;
+                padding: 10px 20px;
+            }
+        }
+        
+        .size-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            justify-content: center;
+        }
+        
+        .size-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .size-btn.active {
+            background: linear-gradient(45deg, #6a11cb, #2575fc);
+            transform: scale(1.05);
+        }
+
+        .highlighted-keyword {
+            background: linear-gradient(45deg, #ff8a00, #e52e71);
+            padding: 2px 6px;
+            border-radius: 4px;
+            animation: highlight-pulse 1.5s infinite;
+            font-weight: bold;
+            box-shadow: 0 0 10px rgba(255, 138, 0, 0.5);
+        }
+
+        @keyframes highlight-pulse {
+            0% { box-shadow: 0 0 5px rgba(255, 138, 0, 0.5); }
+            50% { box-shadow: 0 0 15px rgba(255, 138, 0, 0.8); }
+            100% { box-shadow: 0 0 5px rgba(255, 138, 0, 0.5); }
+        }
+
+        
+            .nav-bar {
+                padding: 1rem;
+            }
+            
+            .nav-logo {
+                gap: 10px;
+            }
+            
+            .nav-title {
+                font-size: 1.4rem;
+            }
+            
+            .bolt-logo {
+                width: 50px;
+                height: 50px;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="nav-bar">
+        <div class="nav-logo">
+            <div class="nav-title">Interactive Learning</div>
+        </div>
+        <div class="nav-links">
+            <a href="/" class="nav-link">Home</a>
+            <a href="/materials.html" class="nav-link">Materials</a>
+            <a href="/scheduler.html" class="nav-link">Schedule</a>
+        </div>
+    </nav>
+
+    <div class="progress-container">
+        <div class="progress-bar" id="progress-bar"></div>
+    </div>
+    <div class="progress-container">
+        <div class="progress-bar" id="progress-bar"></div>
+    </div>
+    
+    <!-- Content Toggle -->
+    <div class="content-toggle" id="contentToggle">
+        <span class="toggle-label active" id="originalLabel">Original</span>
+        <div class="toggle-switch" id="toggleSwitch">
+            <div class="toggle-slider"></div>
+        </div>
+        <span class="toggle-label" id="storyLabel">Story</span>
+    </div>
+    
+    <!-- Voice indicator -->
+    <div class="voice-indicator" id="voiceIndicator">
+        <div class="voice-wave"></div>
+        <div class="voice-wave"></div>
+        <div class="voice-wave"></div>
+        <div class="voice-wave"></div>
+        <span>Reading content...</span>
+    </div>
+    
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-book-open"></i> Interactive Learning</h1>
+            <p class="subtitle">Transform your study materials into engaging visual stories</p>
+        </header>
+        
+        <div class="chat-container">
+            <!-- Material Info Section -->
+            <div class="material-info" id="material-info" style="display: none;">
+                <div class="material-title" id="material-title">Loading material...</div>
+                <div class="material-type" id="material-type">Type</div>
+                <div class="content-preview" id="content-preview">Content preview...</div>
+                <button class="auto-generate-btn" id="auto-generate-btn">
+                    <i class="fas fa-magic"></i> Auto-Generate Learning Story
+                </button>
+            </div>
+            
+            <div class="size-controls">
+                <button class="size-btn active" data-size="6">Small Story (6 items)</button>
+                <button class="size-btn" data-size="20">Medium Story (20 items)</button>
+                <button class="size-btn" data-size="50">Large Story (50 items)</button>
+            </div>
+            
+            <div id="chat-messages">
+                <div class="message ai-message">
+                    <p>Hi there! I'm your learning assistant. I can help you transform your study materials into engaging visual stories.</p>
+                    <p class="warning" id="json-warning">Note: Large stories may take longer to generate but our robust parser will handle them</p>
+                </div>
+            </div>
+            
+            <div id="typing-indicator" >
+                <i class="fas fa-circle-notch fa-spin"></i> Generating your learning story...
+            </div>
+              <div class="chat-container">
+            <!-- Material Info Section -->
+            <div class="material-info" id="material-info" style="display: none;">
+            
+            </div>
+            
+            <div class="input-group">
+                <input type="text" id="user-input">
+                <button id="send-button">
+                    <i class="fas fa-paper-plane"></i> Generate
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+       
+      
+    </div>
+    <div class="story-slides" id="story-slides">
+        <button class="back-btn" id="back-btn">
+            <i class="fas fa-arrow-left"></i>
+        </button>
+        <div class="nav-dots" id="nav-dots"></div>
+        <!-- Slides will be generated here -->
+    </div>
+
+    <script>
+        // DOM elements
+        const chatMessages = document.getElementById('chat-messages');
+        const userInput = document.getElementById('user-input');
+        const sendButton = document.getElementById('send-button');
+        const typingIndicator = document.getElementById('typing-indicator');
+        const storySlides = document.getElementById('story-slides');
+        const backBtn = document.getElementById('back-btn');
+        const navDots = document.getElementById('nav-dots');
+        const progressBar = document.getElementById('progress-bar');
+        const jsonWarning = document.getElementById('json-warning');
+        const sizeButtons = document.querySelectorAll('.size-btn');
+        const materialInfo = document.getElementById('material-info');
+        const materialTitle = document.getElementById('material-title');
+        const materialType = document.getElementById('material-type');
+        const contentPreview = document.getElementById('content-preview');
+        const autoGenerateBtn = document.getElementById('auto-generate-btn');
+        const voiceIndicator = document.getElementById('voiceIndicator');
+        const contentToggle = document.getElementById('contentToggle');
+        const toggleSwitch = document.getElementById('toggleSwitch');
+        const originalLabel = document.getElementById('originalLabel');
+        const storyLabel = document.getElementById('storyLabel');
+
+        // Voice synthesis variables
+        let currentSpeech = null;
+        let currentSlideIndex = 0;
+        let storyData = [];
+        let isScrolling = false;
+        let isStoryMode = false; // Toggle state: false = original, true = story
+        
+        // Configuration
+        let storySize = 6;
+        let currentMaterial = null;
+        const STORY_API_URL = 'https://open-ai21.p.rapidapi.com/chatgpt';
+        const API_KEY = '90a47982b0msh7d7ffcd04487d48p129485jsn7a0013376c96';//'cd5398045fmsh097aa728517c5e2p142dfbjsn56a5ee0689db';
+        
+        // Image Generation API Configuration
+        const IMAGE_API_URL = 'https://ai-text-to-image-generator-flux-free-api.p.rapidapi.com/aaaaaaaaaaaaaaaaaiimagegenerator/quick.php';
+        const IMAGE_API_KEY = ''; //'bf15dae1c8mshd4a89c73f10c3d8p19f74ejsn26a5ee0689db';
+        
+        // Load material from URL parameters or localStorage
+        function loadMaterial() {
+               const learningSegment = localStorage.getItem('currentLearningSegment');
+    if (learningSegment) {
+        currentMaterial = JSON.parse(learningSegment);
+        localStorage.removeItem('currentLearningSegment'); // Clean up
+        return;
+    }
+            const urlParams = new URLSearchParams(window.location.search);
+            const materialId = urlParams.get('material');
+            const question = urlParams.get('question');
+            
+            // Check for material from URL parameters
+            if (materialId) {
+                const materials = JSON.parse(localStorage.getItem('materials')) || [];
+                currentMaterial = materials.find(m => m.id == materialId);
+            }
+            
+            // Check for material from localStorage (from materials page)
+            if (!currentMaterial) {
+                const learningMaterial = localStorage.getItem('currentLearningMaterial');
+                if (learningMaterial) {
+                    currentMaterial = JSON.parse(learningMaterial);
+                    localStorage.removeItem('currentLearningMaterial'); // Clean up
+                }
+            }
+            
+            // Check for question parameter (from camera)
+            if (question && !currentMaterial) {
+                currentMaterial = {
+                    title: 'Camera Capture',
+                    content: decodeURIComponent(question),
+                    type: 'theory'
+                };
+            }
+            
+            // Display material info if available
+            if (currentMaterial) {
+                displayMaterialInfo();
+                addMessage('ai', `I've loaded your material: "${currentMaterial.title}". You can auto-generate a learning story or describe what specific aspect you'd like to focus on.`);
+            }
+        }
+        
+        // Display material information
+        function displayMaterialInfo() {
+            
+            if (!currentMaterial) return;
+            
+            materialInfo.style.display = 'block';
+            materialTitle.textContent = currentMaterial.title;
+            materialType.textContent = currentMaterial.type?.toUpperCase() || 'MATERIAL';
+            
+            // Show content preview (first 300 characters)
+            const preview = currentMaterial.content?.substring(0, 300) + 
+                           (currentMaterial.content?.length > 300 ? '...' : '');
+            contentPreview.textContent = preview || 'No content preview available';
+        }
+        
+        // Voice synthesis functions
+        function stopCurrentSpeech() {
+            if (currentSpeech) {
+                window.speechSynthesis.cancel();
+                currentSpeech = null;
+                voiceIndicator.classList.remove('speaking');
+            }
+        }
+        
+        function speakContent(text, slideIndex) {
+            // Stop any current speech
+            stopCurrentSpeech();
+            
+            if (!text || !window.speechSynthesis) return;
+            
+            // Create new speech utterance
+            currentSpeech = new SpeechSynthesisUtterance(text);
+            
+            // Configure speech settings
+            currentSpeech.rate = 0.9; // Slightly slower for better comprehension
+            currentSpeech.pitch = 1.0;
+            currentSpeech.volume = 1.0;
+            
+            // Try to use a more natural voice if available
+            const voices = window.speechSynthesis.getVoices();
+            const preferredVoice = voices.find(voice => 
+                voice.name.includes('Google') || 
+                voice.name.includes('Microsoft') ||
+                voice.lang.startsWith('en')
+            );
+            if (preferredVoice) {
+                currentSpeech.voice = preferredVoice;
+            }
+            
+            // Event handlers
+            currentSpeech.onstart = () => {
+                voiceIndicator.classList.add('speaking');
+                console.log(`Started speaking slide ${slideIndex + 1}`);
+            };
+            
+            currentSpeech.onend = () => {
+                voiceIndicator.classList.remove('speaking');
+                currentSpeech = null;
+                console.log(`Finished speaking slide ${slideIndex + 1}`);
+            };
+            
+            currentSpeech.onerror = (event) => {
+                console.error('Speech synthesis error:', event.error);
+                voiceIndicator.classList.remove('speaking');
+                currentSpeech = null;
+            };
+            
+            // Start speaking
+            window.speechSynthesis.speak(currentSpeech);
+        }
+        
+        // Toggle content mode
+        function toggleContentMode() {
+            isStoryMode = !isStoryMode;
+            
+            // Update toggle UI
+            if (isStoryMode) {
+                toggleSwitch.classList.add('active');
+                originalLabel.classList.remove('active');
+                storyLabel.classList.add('active');
+            } else {
+                toggleSwitch.classList.remove('active');
+                originalLabel.classList.add('active');
+                storyLabel.classList.remove('active');
+            }
+            
+            // Update all slides content
+            updateAllSlidesContent();
+            
+            // Restart voice for current slide
+            if (storyData[currentSlideIndex]) {
+                const currentContent = isStoryMode ? 
+                    storyData[currentSlideIndex].story_line : 
+                    storyData[currentSlideIndex].content;
+                speakContent(currentContent, currentSlideIndex);
+            }
+        }
+        
+        // Update all slides content based on toggle state
+        function updateAllSlidesContent() {
+            const slides = document.querySelectorAll('.slide');
+            slides.forEach((slide, index) => {
+                const storyElement = slide.querySelector('.slide-story');
+                if (storyElement && storyData[index]) {
+                    const content = isStoryMode ? 
+                        storyData[index].story_line : 
+                        storyData[index].content;
+                    
+                    if (isStoryMode) {
+                        // Highlight keywords in story mode
+                        storyElement.innerHTML = highlightKeywords(content, storyData[index].keyWords);
+                    } else {
+                        // Show plain content in original mode
+                        storyElement.textContent = content;
+                    }
+                }
+            });
+        }
+        
+        // Event listeners for size buttons
+        sizeButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                sizeButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                storySize = parseInt(btn.dataset.size);
+                
+                if(storySize > 20) {
+                    jsonWarning.style.display = 'block';
+                } else {
+                    jsonWarning.style.display = 'none';
+                }
+            });
+        });
+        
+        // Toggle switch event listener
+        toggleSwitch.addEventListener('click', toggleContentMode);
+        
+        // Auto-generate button event listener
+        autoGenerateBtn.addEventListener('click', () => {
+            if (currentMaterial && currentMaterial.content) {
+                userInput.value = `Create an educational story based on: ${currentMaterial.title}`;
+                handleUserInput();
+            } else {
+                addMessage('ai', 'No material content available for auto-generation. Please describe what you\'d like to learn about.');
+            }
+        });
+        
+        // Add a message to the chat
+        function addMessage(role, content) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message');
+            messageDiv.classList.add(role === 'user' ? 'user-message' : 'ai-message');
+            messageDiv.textContent = content;
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+        
+        // Update progress bar
+        function updateProgress(percent) {
+            progressBar.style.width = `${percent}%`;
+        }
+        
+        // Robust JSON parser that can handle large responses
+        function parseLargeJsonResponse(text) {
+            console.log(`This is the response from API: ${text}`)
+            try {
+                // First try standard parsing
+                return JSON.parse(text);
+            } catch (e) {
+                console.log("Standard parse failed, trying advanced repair...");
+                
+                // Attempt to extract JSON from the response
+                const jsonStart = text.indexOf('[');
+                const jsonEnd = text.lastIndexOf(']') + 1;
+                
+                if (jsonStart !== -1 && jsonEnd !== -1 && jsonEnd > jsonStart) {
+                    const jsonStr = text.substring(jsonStart, jsonEnd);
+                    
+                    try {
+                        const value = JSON.parse(jsonStr);
+                        console.log(`this is prased json file : ${value}`)
+                        return JSON.parse(jsonStr);
+                    } catch (e) {
+                        console.log("Extracted JSON parse failed, trying repair...");
+                        
+                        // More advanced repair for common issues
+                        const repaired = jsonStr
+                            .replace(/(\w+):/g, '"$1":') // Add quotes around keys
+                            .replace(/'/g, '"') // Replace single quotes with double
+                            .replace(/,\s*}/g, '}') // Remove trailing commas
+                            .replace(/,\s*]/g, ']'); // Remove trailing commas
+                        
+                        try {
+                        const value1 = JSON.parse(repaired);
+                        console.log(`this is prased json file : ${value1}`)
+                            return JSON.parse(repaired);
+                        } catch (e) {
+                            console.error("JSON repair failed:", e);
+                            throw new Error('Failed to parse JSON after repair attempts');
+                        }
+                    }
+                }
+                
+                throw new Error('No valid JSON found in response');
+            }
+        }
+        
+        // Generate story structure using Claude3 API with enhanced keyword inclusion
+        async function getStoryItems(message, itemCount) {
+            updateProgress(20);
+            
+            // Enhanced prompt that includes material content if available
+            let enhancedMessage = message;
+            if (currentMaterial && currentMaterial.content) {
+                const curre = currentMaterial.content;
+                enhancedMessage = `create an educational story with content: "${curre}", keep in mind that the generate story must contain all the original keywords. you should not miss any available keywords. based one requirment of the user. the user requirment is  ${message}`;
+                console.log(enhancedMessage)
+            }
+            
+            const options = {
+                method: 'POST',
+                headers: {
+                    'x-rapidapi-key': API_KEY,
+                    'x-rapidapi-host': 'open-ai21.p.rapidapi.com',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    messages: [
+                        {
+                            role: 'system',
+                            content: `You are an AI that creates educational content by breaking down learning materials into various sub headings 
+                            and their content, extracting ALL possible keywords and important terms from that content. Your primary goal is to create 
+                            engaging story segments that MUST include ALL keywords from the original content to help with recall and memory.
+                            
+                            CRITICAL REQUIREMENTS:
+                            1. Extract ALL keywords, technical terms, important concepts, and key phrases from the content
+                            2. The story_line MUST include EVERY SINGLE keyword from the keyWords field
+                            3. Use simple, child-friendly language that connects all keywords in a memorable narrative
+                            4. Create exactly ${itemCount} learning segments that build upon each other
+                            5. Each story segment should be a fictional, imaginative story that makes keywords memorable
+                            
+                            Respond ONLY in JSON format: 
+                            [{"id":1,"title":"the original subheading of the content should come here...","content":"the original content of the particular content should come here...","keyWords":"ALL the key words and important terms from the content should come here (comma-separated)","story_line":"the fictional story that MUST include ALL keywords from keyWords field should come here...","promptOfTheLine":"the detailed image prompt to generate image should come here..."},
+                              ...]. 
+                              
+                            EXAMPLE: if the original content mentions "IoT devices, increased connectivity, edge device, cloud computing, IoT interface, security layer"
+                            The story_line MUST include ALL these terms: "In a magical village, there lived special 'IoT devices' that helped everyone communicate. These devices created 'increased connectivity' throughout the land. At the 'edge device' of the village, there was a special gateway that processed information before sending it to the 'cloud computing' castle in the sky. The villagers used a magical 'IoT interface' to control everything, and they built a powerful 'security layer' around their village to protect from digital monsters."
+                            
+                            Remember: EVERY keyword must appear in the story_line to ensure complete recall of the original content.`
+                        },
+                        {
+                            role: 'user',
+                            content: enhancedMessage
+                        }
+                    ],
+                    web_access: false,
+                    temperature: 0.9,
+                    top_k: 5,
+                    top_p: 0.9,
+                    max_tokens: 10000
+                })
+            };
+            
+            try {
+                const response = await fetch(STORY_API_URL, options);
+                const data = await response.json();
+                // Handle large JSON responses with our robust parser
+                addMessage('ai', `the question is ${enhancedMessage}`);
+                addMessage('ai', data.result);
+                
+                return parseLargeJsonResponse(data.result);
+            } catch (error) {
+                console.error('Story API Error:', error);
+                throw new Error('Failed to generate story structure');
+            }
+        }
+        
+        // Generate image using the provided API
+        async function generateImageForStory(prompt, slideIndex, totalSlides) {
+            try {
+                console.log(`Generating image for slide ${slideIndex + 1}: ${prompt}`);
+                
+                const options = {
+                    method: 'POST',
+                    headers: {
+                        'x-rapidapi-key': IMAGE_API_KEY,
+                        'x-rapidapi-host': 'ai-text-to-image-generator-flux-free-api.p.rapidapi.com',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        prompt: prompt,
+                        style_id: 2, // You can adjust this based on desired style
+                        size: '1-1'  // Square format for better display
+                    })
+                };
+
+                const response = await fetch(IMAGE_API_URL, options);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                // The API returns the image as a blob/binary data
+                const imageBlob = await response.blob();
+                const imageUrl = URL.createObjectURL(imageBlob);
+                
+                console.log(`Image generated successfully for slide ${slideIndex + 1}: ${imageUrl}`);
+                
+                return {
+                    url: imageUrl,
+                    source: "AI Generated",
+                    isGenerated: true
+                };
+                
+            } catch (error) {
+                console.error(`Error generating image for slide ${slideIndex + 1}:`, error);
+                
+                // Fallback to placeholder if image generation fails
+                return {
+                    url: `https://via.placeholder.com/1600x900/1a2a6c/ffffff?text=Slide+${slideIndex + 1}`,
+                    source: "Placeholder (Generation Failed)",
+                    isGenerated: false
+                };
+            }
+        }
+
+        // Modified displayStorySlides function with dynamic image generation and toggle support
+        async function displayStorySlides(storyItems) {
+            updateProgress(60);
+            
+            // Store story data for voice synthesis and toggle
+            storyData = storyItems;
+            
+            // Generate slides for each story item
+            storySlides.innerHTML = `
+                <button class="back-btn" id="back-btn">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+                <div class="nav-dots" id="nav-dots"></div>
+            `;
+            
+            // Show content toggle
+            contentToggle.style.display = 'flex';
+            
+            // Add slides with dynamic image generation
+            for (const [index, item] of storyItems.entries()) {
+                // Create slide with loading indicator first
+                const slide = document.createElement('div');
+                slide.className = 'slide';
+                slide.dataset.id = item.id;
+                slide.dataset.keywords = item.keyWords;
+                slide.dataset.storyText = item.story_line;
+                slide.dataset.originalText = item.content;
+                
+                // Add loading indicator
+                slide.innerHTML = `
+                    <div class="image-loading" id="loading-${index}">
+                        <div class="loading-spinner"></div>
+                        <div class="loading-text">Generating image for slide ${index + 1}...</div>
+                    </div>
+                    <div class="slide-overlay"></div>
+                    <div class="slide-content">
+                        <h2 class="slide-title">${item.title}</h2>
+                        <div class="slide-story">${isStoryMode ? item.story_line : item.content}</div>
+                    </div>
+                    <div class="slide-id">${item.id}</div>
+                    <div class="credit">Generating image...</div>
+                `;
+                
+                storySlides.appendChild(slide);
+                
+                // Add navigation dot
+                const dot = document.createElement('div');
+                dot.className = 'dot';
+                dot.dataset.index = index;
+                dot.addEventListener('click', () => {
+                    scrollToSlide(index);
+                });
+                navDots.appendChild(dot);
+                
+                // Update progress
+                updateProgress(60 + (index / storyItems.length) * 20);
+                
+                // Generate image asynchronously
+                generateImageForStory(item.promptOfTheLine, index, storyItems.length)
+                    .then(imageData => {
+                        console.log(`Setting background image for slide ${index + 1}: ${imageData.url}`);
+                        
+                        // FIXED: Properly set the background image
+                        slide.style.backgroundImage = `url("${imageData.url}")`;
+                        slide.style.backgroundSize = 'cover';
+                        slide.style.backgroundPosition = 'center';
+                        slide.style.backgroundRepeat = 'no-repeat';
+                        
+                        // Remove loading indicator
+                        const loadingElement = slide.querySelector(`#loading-${index}`);
+                        if (loadingElement) {
+                            loadingElement.remove();
+                        }
+                        
+                        // Update credit
+                        const creditElement = slide.querySelector('.credit');
+                        if (creditElement) {
+                            creditElement.textContent = `Image: ${imageData.source}`;
+                        }
+                        
+                        console.log(`Slide ${index + 1} image loaded and applied successfully`);
+                    })
+                    .catch(error => {
+                        console.error(`Failed to load image for slide ${index + 1}:`, error);
+                        
+                        // Remove loading indicator and show error
+                        const loadingElement = slide.querySelector(`#loading-${index}`);
+                        if (loadingElement) {
+                            loadingElement.innerHTML = `
+                                <div class="loading-text" style="color: #ff6b6b;">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                    Image generation failed
+                                </div>
+                            `;
+                            
+                            // Remove error message after 3 seconds
+                            setTimeout(() => {
+                                loadingElement.remove();
+                            }, 3000);
+                        }
+                    });
+            }
+            
+            // Show slides container
+            storySlides.style.display = 'block';
+            
+            // Set up navigation
+            document.getElementById('back-btn').addEventListener('click', () => {
+                // Stop any current speech when leaving
+                stopCurrentSpeech();
+                storySlides.style.display = 'none';
+                contentToggle.style.display = 'none';
+                
+                // Clean up generated image URLs to free memory
+                document.querySelectorAll('.slide').forEach(slide => {
+                    const bgImage = slide.style.backgroundImage;
+                    if (bgImage && bgImage.includes('blob:')) {
+                        const url = bgImage.match(/url\("(.+)"\)/)?.[1];
+                        if (url) {
+                            URL.revokeObjectURL(url);
+                        }
+                    }
+                });
+            });
+            
+            // Initialize first slide as active and start voice
+            updateActiveSlide(0);
+            
+            // Start speaking the first slide after a short delay
+            setTimeout(() => {
+                if (storyData[0]) {
+                    const initialContent = isStoryMode ? 
+                        storyData[0].story_line : 
+                        storyData[0].content;
+                    speakContent(initialContent, 0);
+                }
+            }, 1000);
+            
+            // Set up scroll detection with throttling
+            let scrollTimeout;
+            storySlides.addEventListener('scroll', () => {
+                isScrolling = true;
+                
+                // Clear existing timeout
+                clearTimeout(scrollTimeout);
+                
+                // Set new timeout
+                scrollTimeout = setTimeout(() => {
+                    const slideIndex = Math.round(storySlides.scrollTop / window.innerHeight);
+                    
+                    // Only update if slide actually changed
+                    if (slideIndex !== currentSlideIndex) {
+                        currentSlideIndex = slideIndex;
+                        updateActiveSlide(slideIndex);
+                        
+                        // Start speaking the new slide with appropriate content
+                        if (storyData[slideIndex]) {
+                            const content = isStoryMode ? 
+                                storyData[slideIndex].story_line : 
+                                storyData[slideIndex].content;
+                            speakContent(content, slideIndex);
+                        }
+                    }
+                    
+                    isScrolling = false;
+                }, 150); // Throttle scroll events
+            });
+            
+            updateProgress(100);
+            setTimeout(() => {
+                progressBar.style.width = '0%';
+            }, 500);
+        }
+
+        // Add scroll to slide function
+        function scrollToSlide(index) {
+            const slideHeight = window.innerHeight;
+            storySlides.scrollTo({
+                top: index * slideHeight,
+                behavior: 'smooth'
+            });
+        }
+
+        // Add this function to update highlighting on scroll
+        function updateActiveSlide(index) {
+            const dots = document.querySelectorAll('.dot');
+            dots.forEach((dot, i) => {
+                dot.classList.toggle('active', i === index);
+            });
+            
+            // Update content based on toggle state
+            updateAllSlidesContent();
+        }
+        
+        // Handle user input
+        async function handleUserInput() {
+            const message = userInput.value.trim();
+            if (!message) return;
+            
+            // Add user message
+            addMessage('user', message);
+            userInput.value = '';
+            
+            // Show typing indicator
+            typingIndicator.style.display = 'block';
+            
+            try {
+                // Get story items from API
+                addMessage('ai', `Generating a learning story with ${storySize} segments that includes ALL keywords from your material...`);
+
+                const storyItems = await getStoryItems(message, storySize);
+                
+                // Add AI response
+                addMessage('ai', `Successfully created learning story with ${storyItems.length} segments. All keywords have been included in the stories. Generating custom images for each slide...`);
+                
+                // Display slides with dynamic image generation
+                await displayStorySlides(storyItems);
+            } catch (error) {
+                addMessage('ai', 'Sorry, something went wrong. Please try again.');                
+                console.error('Error:', error);
+            } finally {
+                // Hide typing indicator
+                typingIndicator.style.display = 'none';
+            }
+        }
+        
+        // Event listeners
+        sendButton.addEventListener('click', handleUserInput);
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') handleUserInput();
+        });
+        
+        // Stop speech when page is about to unload
+        window.addEventListener('beforeunload', () => {
+            stopCurrentSpeech();
+        });
+        
+        // Stop speech when page loses focus
+        window.addEventListener('blur', () => {
+            stopCurrentSpeech();
+        });
+        
+        // Initialize
+        window.addEventListener('DOMContentLoaded', () => {
+            loadMaterial();
+            if (currentMaterial) {
+                addMessage('ai', `Welcome! I've loaded your material "${currentMaterial.title}". Click the auto-generate button or describe what specific aspect you'd like to explore in an interactive story format.`);
+            } else {
+                addMessage('ai', "Hi there! I'm your learning assistant. Describe what you'd like to learn about and I'll create an engaging visual story for you.");
+            }
+        });
+
+        // Add this helper function to highlight keywords
+        function highlightKeywords(storyLine, keywordsString) {
+            if (!keywordsString) return storyLine;
+            
+            const keywords = keywordsString.split(',').map(kw => kw.trim().toLowerCase());
+            let highlighted = storyLine;
+            
+            keywords.forEach(keyword => {
+                if (!keyword) return;
+                const escapedKeyword = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                const regex = new RegExp(`\\b${escapedKeyword}\\b`, 'gi');
+                highlighted = highlighted.replace(regex, '<span class="highlighted-keyword">$&</span>');
+            });
+            
+            return highlighted;
+        }
+    </script>
+</body>
+</html>

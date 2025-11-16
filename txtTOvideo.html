@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text to Video Generator</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; }
+        input, select { width: 100%; padding: 8px; }
+        button { padding: 10px 20px; background: #007bff; color: white; border: none; cursor: pointer; }
+        #result { margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <h1>Text to Video Generator</h1>
+    
+    <form id="videoForm">
+        <div class="form-group">
+            <label for="prompt">Prompt:</label>
+            <input type="text" id="prompt" required value="galaxy">
+        </div>
+
+        <div class="form-group">
+            <label for="negativePrompt">Negative Prompt:</label>
+            <input type="text" id="negativePrompt" value="blurry">
+        </div>
+
+        <div class="form-group">
+            <label for="size">Size:</label>
+            <select id="size">
+                <option value="512x512">512x512</option>
+                <option value="768x768">768x768</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="style">Style:</label>
+            <select id="style">
+                <option value="cartoon">Cartoon</option>
+                <option value="realistic">Realistic</option>
+            </select>
+        </div>
+
+        <button type="submit">Generate Video</button>
+    </form>
+
+    <div id="result"></div>
+
+    <script>
+        document.getElementById('videoForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const prompt = document.getElementById('prompt').value;
+            const negativePrompt = document.getElementById('negativePrompt').value;
+            const size = document.getElementById('size').value;
+            const style = document.getElementById('style').value;
+
+            const url = `https://flux-api-4-custom-models-100-style.p.rapidapi.com/create?prompt=${encodeURIComponent(prompt)}&negativePrompt=${encodeURIComponent(negativePrompt)}&size=${size}&style=${style}`;
+            
+            const options = {
+                method: 'GET',
+                headers: {
+                    'x-rapidapi-key': '7c48b1d5f8msh008a27738b75873p1afe39jsn5717d1b33815',
+                    'x-rapidapi-host': 'flux-api-4-custom-models-100-style.p.rapidapi.com'
+                }
+            };
+
+            try {
+                const response = await fetch(url, options);
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    const videoContainer = document.getElementById('result');
+                    videoContainer.innerHTML = `
+                        <video controls style="max-width: 100%">
+                            <source src="${result.output}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    `;
+                } else {
+                    alert('Error generating video: ' + result.message);
+                }
+            } catch (error) {
+                console.error(error);
+                alert('An error occurred. Please try again.');
+            }
+        });
+    </script>
+</body>
+</html>

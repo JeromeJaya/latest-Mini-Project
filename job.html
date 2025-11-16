@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JobFinder - India's Premier Job Search Platform</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --secondary: #a855f7;
+            --accent: #ec4899;
+            --dark: #0f172a;
+            --neon: #00ff88;
+            --darker: #0a0f1f;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--darker), var(--dark));
+            color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
+            padding-top: 80px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header Styles */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            margin-bottom: 30px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(15, 23, 42, 0.9);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 1.5rem 2rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--neon), var(--primary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo i {
+            font-size: 2.2rem;
+        }
+
+        .bolt-logo {
+            width: 80px;
+            height: 80px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 50%;
+            box-shadow: 0 2px 10px rgba(255, 255, 255, 0.1);
+        }
+
+        .bolt-logo:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 20px rgba(255, 255, 255, 0.2);
+        }
+
+        nav ul {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        nav a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        nav a:hover {
+            color: var(--neon);
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--neon);
+            transition: width 0.3s ease;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 50px 0;
+            margin-bottom: 50px;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, var(--neon), var(--primary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.8);
+            max-width: 700px;
+            margin: 0 auto 30px;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* Search Section */
+        .search-container {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 40px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .search-box {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 15px 20px;
+            border: none;
+            border-radius: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .search-input:focus {
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 0 2px var(--neon);
+        }
+
+        .search-btn {
+            background: linear-gradient(45deg, var(--neon), var(--primary));
+            border: none;
+            border-radius: 50px;
+            color: var(--dark);
+            padding: 0 30px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .search-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 255, 136, 0.4);
+        }
+
+        .filters {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .filter-select {
+            flex: 1;
+            min-width: 200px;
+            padding: 12px 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+            outline: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            appearance: none;
+            background-image: url('data:image/svg+xml;utf8,<svg fill="white" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 20px;
+            padding-right: 45px;
+        }
+
+        .filter-select:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .filter-select:focus {
+            border-color: var(--neon);
+            box-shadow: 0 0 0 2px rgba(0, 255, 136, 0.2);
+        }
+
+        .filter-select option {
+            background: var(--dark);
+            color: white;
+            padding: 10px;
+        }
+
+        /* Results Section */
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .results-count {
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+
+        .sort-select {
+            padding: 10px 35px 10px 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+            outline: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            appearance: none;
+            background-image: url('data:image/svg+xml;utf8,<svg fill="white" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 18px;
+        }
+
+        .sort-select:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .sort-select:focus {
+            border-color: var(--neon);
+            box-shadow: 0 0 0 2px rgba(0, 255, 136, 0.2);
+        }
+
+        .sort-select option {
+            background: var(--dark);
+            color: white;
+        }
+
+        .job-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+
+        .job-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transform: translateY(0);
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .job-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+            border-color: rgba(0, 255, 136, 0.3);
+        }
+
+        .job-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--neon), var(--primary));
+        }
+
+        .job-header {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .job-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--neon);
+        }
+
+        .job-title {
+            font-size: 1.3rem;
+            margin-bottom: 5px;
+            color: white;
+        }
+
+        .job-company {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1rem;
+        }
+
+        .job-details {
+            display: flex;
+            gap: 15px;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+
+        .job-detail {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .job-description {
+            color: rgba(255, 255, 255, 0.7);
+            margin: 15px 0;
+            line-height: 1.6;
+            font-size: 0.95rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .job-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .job-type {
+            background: rgba(0, 255, 136, 0.1);
+            color: var(--neon);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+
+        .apply-btn {
+            background: transparent;
+            border: 1px solid var(--neon);
+            color: var(--neon);
+            padding: 8px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .apply-btn:hover {
+            background: var(--neon);
+            color: var(--dark);
+        }
+
+        /* Save Job Button */
+        .save-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: transparent;
+            border: none;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            z-index: 2;
+        }
+
+        .save-btn:hover {
+            color: var(--neon);
+        }
+
+        .save-btn.saved {
+            color: #ffd700;
+        }
+
+        .save-btn.saved i::before {
+            content: "\f005";
+        }
+
+        /* Saved Jobs Dropdown */
+        .saved-jobs-dropdown {
+            position: relative;
+        }
+
+        .saved-jobs-dropdown > a {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 0;
+            background: rgba(30, 31, 48, 0.98);
+            min-width: 320px;
+            max-height: 400px;
+            overflow-y: auto;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 10px;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .dropdown-content.show {
+            display: block;
+        }
+
+        .saved-job-item {
+            padding: 12px 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+            transition: all 0.3s;
+            border-radius: 8px;
+            margin-bottom: 5px;
+        }
+
+        .saved-job-item:last-child {
+            border-bottom: none;
+        }
+
+        .saved-job-item:hover {
+            background: rgba(0, 255, 136, 0.1);
+            transform: translateX(5px);
+        }
+
+        .saved-job-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--neon);
+        }
+
+        .saved-job-company {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .no-saved-jobs {
+            padding: 15px;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .view-all-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            text-align: center;
+            background: rgba(0, 255, 136, 0.15);
+            color: var(--neon);
+            border-radius: 8px;
+            margin-top: 10px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .view-all-btn:hover {
+            background: rgba(0, 255, 136, 0.25);
+            transform: translateY(-2px);
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 40px 0;
+        }
+
+        .page-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .page-btn.active, .page-btn:hover {
+            background: var(--neon);
+            color: var(--dark);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            margin-top: 50px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+        }
+
+        /* Floating elements */
+        .floating-element {
+            position: fixed;
+            width: 100px;
+            height: 100px;
+            background: rgba(0, 255, 136, 0.1);
+            border-radius: 50%;
+            z-index: -1;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        /* Saved Jobs Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            overflow: auto;
+        }
+
+        .modal-content {
+            background: rgba(30, 31, 48, 0.95);
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 800px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .saved-jobs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .search-box {
+                flex-direction: column;
+            }
+            
+            .filters {
+                flex-direction: column;
+            }
+            
+            nav ul {
+                display: none;
+            }
+            
+            .job-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .logo {
+                gap: 10px;
+                font-size: 1.4rem;
+            }
+            
+            .bolt-logo {
+                width: 50px;
+                height: 50px;
+            }
+
+            .dropdown-content {
+                right: auto;
+                left: 0;
+                min-width: 280px;
+                max-width: 90vw;
+            }
+
+            .filter-select {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-element" style="top: 10%; left: 5%;"></div>
+    <div class="floating-element" style="top: 60%; right: 10%; width: 150px; height: 150px;"></div>
+    
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-briefcase"></i>
+                <span>JobFinder</span>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="/"><i class="fas fa-home"></i> Home</a></li>
+                    <li class="saved-jobs-dropdown">
+                        <a href="#" id="savedJobsBtn"><i class="fas fa-bookmark"></i> Saved Jobs <i class="fas fa-caret-down"></i></a>
+                        <div class="dropdown-content" id="savedJobsDropdown">
+                            <div class="saved-job-item" onclick="openSavedJobsModal()">
+                                <div class="saved-job-title">Senior Developer</div>
+                                <div class="saved-job-company">Tech Solutions Ltd</div>
+                            </div>
+                            <div class="saved-job-item" onclick="openSavedJobsModal()">
+                                <div class="saved-job-title">Product Manager</div>
+                                <div class="saved-job-company">Innovate Inc</div>
+                            </div>
+                            <a href="#" class="view-all-btn" onclick="openSavedJobsModal()">View All Saved Jobs</a>
+                        </div>
+                    </li>
+                    <li><a href="#"><i class="fas fa-bell"></i> Alerts</a></li>
+                    <li><a href="#"><i class="fas fa-user"></i> Profile</a></li>
+                </ul>
+            </nav>
+        </header>
+        
+        <section class="hero">
+            <h1>Find Your Dream Job in India</h1>
+            <p>Search thousands of job listings and find the perfect match for your skills and career goals</p>
+        </section>
+        
+        <section class="search-container">
+            <div class="search-box">
+                <input type="text" class="search-input" id="jobQuery" placeholder="Job title, keywords, or company" value="developer jobs in india">
+                <button class="search-btn" id="searchBtn">
+                    <i class="fas fa-search"></i> Search Jobs
+                </button>
+            </div>
+            <div class="filters">
+                <select class="filter-select" id="state">
+                    <option value="">All States</option>
+                    <option value="MH">Maharashtra</option>
+                    <option value="DL">Delhi</option>
+                    <option value="KA">Karnataka</option>
+                    <option value="TN">Tamil Nadu</option>
+                    <option value="UP">Uttar Pradesh</option>
+                    <option value="GJ">Gujarat</option>
+                    <option value="AP">Andhra Pradesh</option>
+                    <option value="TG">Telangana</option>
+                    <option value="WB">West Bengal</option>
+                    <option value="RJ">Rajasthan</option>
+                    <option value="HR">Haryana</option>
+                    <option value="PB">Punjab</option>
+                    <option value="KL">Kerala</option>
+                </select>
+                <select class="filter-select" id="datePosted">
+                    <option value="all">Any Date</option>
+                    <option value="today">Today</option>
+                    <option value="3days">Last 3 Days</option>
+                    <option value="week">Last Week</option>
+                    <option value="month">Last Month</option>
+                </select>
+                <select class="filter-select" id="employmentType">
+                    <option value="">All Employment Types</option>
+                    <option value="FULLTIME">Full-time</option>
+                    <option value="PARTTIME">Part-time</option>
+                    <option value="CONTRACTOR">Contract</option>
+                    <option value="INTERN">Internship</option>
+                </select>
+            </div>
+        </section>
+        
+        <section class="results">
+            <div class="results-header">
+                <div class="results-count">Showing <span id="resultCount">8</span> jobs</div>
+                <div>
+                    <select class="sort-select" id="sortBy">
+                        <option value="relevance">Relevance</option>
+                        <option value="date">Date Posted</option>
+                        <option value="salary">Salary</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="job-grid" id="jobResults">
+                <!-- Job cards will be dynamically inserted here -->
+            </div>
+            
+            <div class="pagination">
+                <button class="page-btn active">1</button>
+                <button class="page-btn">2</button>
+                <button class="page-btn">3</button>
+                <button class="page-btn"><i class="fas fa-chevron-right"></i></button>
+            </div>
+        </section>
+        
+        <footer>
+            <p>© 2023 JobFinder. All rights reserved. | Powered by JSearch API</p>
+        </footer>
+    </div>
+    
+    <!-- Saved Jobs Modal -->
+    <div class="modal" id="savedJobsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-bookmark"></i> Your Saved Jobs</h2>
+                <button class="close-modal" id="closeModal">&times;</button>
+            </div>
+            <div class="saved-jobs-grid" id="savedJobsGrid">
+                <!-- Saved jobs will be displayed here -->
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // API Configuration
+        const API_KEY = 'cd5398045fmsh097aa728517c5e2p142dfbjsn56474f130c02';
+        const API_HOST = 'jsearch.p.rapidapi.com';
+        
+        // DOM Elements
+        const searchBtn = document.getElementById('searchBtn');
+        const jobQuery = document.getElementById('jobQuery');
+        const jobResults = document.getElementById('jobResults');
+        const resultCount = document.getElementById('resultCount');
+        const savedJobsBtn = document.getElementById('savedJobsBtn');
+        const savedJobsDropdown = document.getElementById('savedJobsDropdown');
+        const savedJobsModal = document.getElementById('savedJobsModal');
+        const closeModal = document.getElementById('closeModal');
+        const savedJobsGrid = document.getElementById('savedJobsGrid');
+        
+        // Sample job data for demonstration
+        const jobData = [
+            {
+                id: 1,
+                title: "Senior Frontend Developer",
+                company: "Tech Innovations Ltd",
+                location: "Bangalore, Karnataka",
+                salary: "₹12,00,000 - ₹18,00,000/yr",
+                type: "Full-time",
+                description: "We are looking for an experienced frontend developer with React expertise to join our team building cutting-edge web applications.",
+                posted: "2 days ago",
+                applyLink: "#"
+            },
+            {
+                id: 2,
+                title: "Backend Engineer (Node.js)",
+                company: "Digital Solutions Inc",
+                location: "Hyderabad, Telangana",
+                salary: "₹10,00,000 - ₹15,00,000/yr",
+                type: "Full-time",
+                description: "Join our backend team to develop scalable APIs and services using Node.js and modern cloud technologies.",
+                posted: "1 day ago",
+                applyLink: "#"
+            },
+            {
+                id: 3,
+                title: "UI/UX Designer",
+                company: "Creative Minds",
+                location: "Mumbai, Maharashtra",
+                salary: "₹8,00,000 - ₹12,00,000/yr",
+                type: "Full-time",
+                description: "We're seeking a talented designer to create beautiful and intuitive user interfaces for our enterprise applications.",
+                posted: "3 days ago",
+                applyLink: "#"
+            },
+            {
+                id: 4,
+                title: "Data Scientist",
+                company: "Analytics Pro",
+                location: "Chennai, Tamil Nadu",
+                salary: "₹15,00,000 - ₹22,00,000/yr",
+                type: "Full-time",
+                description: "Work with large datasets to derive insights and build predictive models that drive business decisions.",
+                posted: "5 days ago",
+                applyLink: "#"
+            },
+            {
+                id: 5,
+                title: "DevOps Engineer",
+                company: "Cloud Systems",
+                location: "Pune, Maharashtra",
+                salary: "₹14,00,000 - ₹20,00,000/yr",
+                type: "Contract",
+                description: "Help us build and maintain our cloud infrastructure and CI/CD pipelines for high-availability systems.",
+                posted: "1 week ago",
+                applyLink: "#"
+            },
+            {
+                id: 6,
+                title: "Mobile App Developer",
+                company: "AppWorks",
+                location: "Gurgaon, Haryana",
+                salary: "₹9,00,000 - ₹14,00,000/yr",
+                type: "Full-time",
+                description: "Develop cross-platform mobile applications using React Native for our growing user base.",
+                posted: "4 days ago",
+                applyLink: "#"
+            },
+            {
+                id: 7,
+                title: "Product Manager",
+                company: "Innovate India",
+                location: "Noida, Uttar Pradesh",
+                salary: "₹18,00,000 - ₹25,00,000/yr",
+                type: "Full-time",
+                description: "Lead product development from conception to launch, working with engineering and design teams.",
+                posted: "2 days ago",
+                applyLink: "#"
+            },
+            {
+                id: 8,
+                title: "QA Automation Engineer",
+                company: "Quality First",
+                location: "Ahmedabad, Gujarat",
+                salary: "₹7,00,000 - ₹11,00,000/yr",
+                type: "Full-time",
+                description: "Build and maintain automated test suites to ensure product quality across our applications.",
+                posted: "6 days ago",
+                applyLink: "#"
+            }
+        ];
+        
+        // Initialize saved jobs from localStorage
+        let savedJobs = JSON.parse(localStorage.getItem('savedJobs')) || [];
+        
+        // Fetch jobs from API (mock implementation for this demo)
+        function fetchJobs() {
+            // In a real implementation, this would call the JSearch API
+            // For this demo, we'll use the sample jobData
+            
+            // Clear previous results
+            jobResults.innerHTML = '';
+            
+            // Display job results
+            jobData.forEach(job => {
+                const jobCard = createJobCard(job);
+                jobResults.appendChild(jobCard);
+            });
+            
+            // Update result count
+            resultCount.textContent = jobData.length;
+        }
+        
+        // Create job card element
+        function createJobCard(job) {
+            const card = document.createElement('div');
+            card.className = 'job-card';
+            
+            // Check if job is saved
+            const isSaved = savedJobs.some(savedJob => savedJob.id === job.id);
+            
+            card.innerHTML = `
+                <button class="save-btn ${isSaved ? 'saved' : ''}" data-job-id="${job.id}">
+                    <i class="fas fa-bookmark"></i>
+                </button>
+                <div class="job-header">
+                    <div class="job-icon">
+                        <i class="fas fa-briefcase"></i>
+                    </div>
+                    <div>
+                        <h3 class="job-title">${job.title}</h3>
+                        <div class="job-company">${job.company}</div>
+                    </div>
+                </div>
+                
+                <div class="job-details">
+                    <div class="job-detail">
+                        <i class="fas fa-map-marker-alt"></i>
+                        ${job.location}
+                    </div>
+                    <div class="job-detail">
+                        <i class="fas fa-dollar-sign"></i>
+                        ${job.salary}
+                    </div>
+                    <div class="job-detail">
+                        <i class="fas fa-clock"></i>
+                        ${job.posted}
+                    </div>
+                </div>
+                
+                <div class="job-description">
+                    ${job.description}
+                </div>
+                
+                <div class="job-footer">
+                    <div class="job-type">${job.type}</div>
+                    <button class="apply-btn" onclick="window.open('${job.applyLink}', '_blank')">
+                        Apply Now <i class="fas fa-external-link-alt"></i>
+                    </button>
+                </div>
+            `;
+            
+            // Add save functionality
+            const saveBtn = card.querySelector('.save-btn');
+            saveBtn.addEventListener('click', () => toggleSaveJob(job, saveBtn));
+            
+            return card;
+        }
+        
+        // Toggle save job
+        function toggleSaveJob(job, button) {
+            const jobId = job.id;
+            const isSaved = button.classList.contains('saved');
+            
+            if (isSaved) {
+                // Remove from saved jobs
+                savedJobs = savedJobs.filter(savedJob => savedJob.id !== jobId);
+                button.classList.remove('saved');
+            } else {
+                // Add to saved jobs
+                savedJobs.push(job);
+                button.classList.add('saved');
+            }
+            
+            // Update localStorage
+            localStorage.setItem('savedJobs', JSON.stringify(savedJobs));
+            
+            // Update the dropdown
+            updateSavedJobsDropdown();
+        }
+        
+        // Update saved jobs dropdown
+        function updateSavedJobsDropdown() {
+            const dropdownContent = document.getElementById('savedJobsDropdown');
+            dropdownContent.innerHTML = '';
+            
+            if (savedJobs.length === 0) {
+                dropdownContent.innerHTML = '<div class="no-saved-jobs">No jobs saved yet</div>';
+                return;
+            }
+            
+            // Show up to 3 saved jobs in dropdown
+            const maxInDropdown = 3;
+            const jobsToShow = savedJobs.slice(0, maxInDropdown);
+            
+            jobsToShow.forEach(job => {
+                const jobItem = document.createElement('div');
+                jobItem.className = 'saved-job-item';
+                jobItem.innerHTML = `
+                    <div class="saved-job-title">${job.title}</div>
+                    <div class="saved-job-company">${job.company}</div>
+                `;
+                jobItem.addEventListener('click', () => openSavedJobsModal());
+                dropdownContent.appendChild(jobItem);
+            });
+            
+            // Add view all button
+            if (savedJobs.length > maxInDropdown) {
+                const viewAllBtn = document.createElement('a');
+                viewAllBtn.className = 'view-all-btn';
+                viewAllBtn.textContent = `View All (${savedJobs.length})`;
+                viewAllBtn.href = '#';
+                viewAllBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    openSavedJobsModal();
+                });
+                dropdownContent.appendChild(viewAllBtn);
+            }
+        }
+        
+        // Open saved jobs modal
+        function openSavedJobsModal() {
+            savedJobsModal.style.display = 'block';
+            savedJobsGrid.innerHTML = '';
+            
+            if (savedJobs.length === 0) {
+                savedJobsGrid.innerHTML = '<div class="no-saved-jobs">You haven\'t saved any jobs yet</div>';
+                return;
+            }
+            
+            savedJobs.forEach(job => {
+                const jobCard = document.createElement('div');
+                jobCard.className = 'job-card';
+                jobCard.innerHTML = `
+                    <div class="job-header">
+                        <div class="job-icon">
+                            <i class="fas fa-briefcase"></i>
+                        </div>
+                        <div>
+                            <h3 class="job-title">${job.title}</h3>
+                            <div class="job-company">${job.company}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="job-details">
+                        <div class="job-detail">
+                            <i class="fas fa-map-marker-alt"></i>
+                            ${job.location}
+                        </div>
+                        <div class="job-detail">
+                            <i class="fas fa-dollar-sign"></i>
+                            ${job.salary}
+                        </div>
+                    </div>
+                    
+                    <div class="job-description">
+                        ${job.description}
+                    </div>
+                    
+                    <div class="job-footer">
+                        <div class="job-type">${job.type}</div>
+                        <button class="apply-btn" onclick="window.open('${job.applyLink}', '_blank')">
+                            Apply Now <i class="fas fa-external-link-alt"></i>
+                        </button>
+                    </div>
+                `;
+                savedJobsGrid.appendChild(jobCard);
+            });
+            
+            // Close dropdown if open
+            savedJobsDropdown.classList.remove('show');
+        }
+        
+        // Close modal
+        function closeSavedJobsModal() {
+            savedJobsModal.style.display = 'none';
+        }
+        
+        // Event listeners
+        searchBtn.addEventListener('click', fetchJobs);
+        savedJobsBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            savedJobsDropdown.classList.toggle('show');
+        });
+        closeModal.addEventListener('click', closeSavedJobsModal);
+        
+        // Close dropdown when clicking outside
+        window.addEventListener('click', (e) => {
+            if (!e.target.closest('.saved-jobs-dropdown')) {
+                savedJobsDropdown.classList.remove('show');
+            }
+            if (e.target === savedJobsModal) {
+                closeSavedJobsModal();
+            }
+        });
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchJobs();
+            updateSavedJobsDropdown();
+        });
+    </script>
+</body>
+</html>

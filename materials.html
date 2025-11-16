@@ -1,0 +1,1323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Materials - VisioLearn</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --secondary: #a855f7;
+            --accent: #ec4899;
+            --dark: #0f172a;
+            --darker: #0a0f1f;
+            --neon: #00ff88;
+            --completed: #00cc66;
+            --pending: #ff4d4d;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--darker), var(--dark));
+            color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            margin-top: 80px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 2rem;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--neon), var(--primary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo i {
+            font-size: 2.2rem;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-btn:hover {
+            background: var(--neon);
+            color: var(--dark);
+        }
+
+        .hero {
+            text-align: center;
+            padding: 3rem 0;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(45deg, var(--neon), var(--primary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 2rem;
+        }
+
+        .upload-area {
+            border: 2px dashed rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            padding: 3rem;
+            text-align: center;
+            margin: 2rem 0;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .upload-area:hover, .upload-area.dragover {
+            border-color: var(--neon);
+            background: rgba(0, 255, 136, 0.05);
+            transform: translateY(-5px);
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            color: var(--neon);
+            margin-bottom: 1rem;
+        }
+
+        .upload-text {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .upload-subtext {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+        }
+
+        .materials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .material-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .material-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            border-color: rgba(0, 255, 136, 0.3);
+        }
+
+        .material-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+        }
+
+        .material-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--neon);
+        }
+
+        .material-type {
+            display: inline-block;
+            background: rgba(99, 102, 241, 0.2);
+            color: var(--primary);
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+
+        .material-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .action-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .action-btn:hover {
+            background: var(--neon);
+            color: var(--dark);
+            transform: scale(1.1);
+        }
+
+        .action-btn.delete:hover {
+            background: var(--pending);
+        }
+
+        .material-content {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            max-height: 100px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .material-content::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 30px;
+            background: linear-gradient(transparent, rgba(255, 255, 255, 0.05));
+        }
+
+        .material-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .progress-container {
+            flex: 1;
+            margin-right: 1rem;
+        }
+
+        .progress-label {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 0.3rem;
+        }
+
+        .progress-bar {
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--neon), var(--primary));
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+
+        .material-buttons {
+            display: flex;
+            gap: 0.8rem;
+        }
+
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border-radius: 20px;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--neon);
+            color: var(--dark);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 255, 136, 0.3);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .add-material-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            background: var(--neon);
+            color: var(--dark);
+            border: none;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.3);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .add-material-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 15px 40px rgba(0, 255, 136, 0.4);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: rgba(30, 41, 59, 0.95);
+            margin: 5% auto;
+            padding: 2rem;
+            border-radius: 20px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            color: var(--neon);
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .close-modal:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        select.form-control {
+            cursor: pointer;
+            appearance: none;
+            background-image: url('data:image/svg+xml;utf8,<svg fill="white" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 20px;
+            padding-right: 45px;
+        }
+
+        select.form-control option {
+            background: var(--dark);
+            color: white;
+            padding: 10px;
+        }
+
+        .form-control:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--neon);
+            box-shadow: 0 0 0 3px rgba(0, 255, 136, 0.2);
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 2rem;
+        }
+
+        .notification {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            max-width: 350px;
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            color: white;
+            font-weight: 500;
+            z-index: 3000;
+            transform: translateX(400px);
+            opacity: 1;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .notification.success {
+            background: rgba(0, 204, 102, 0.9);
+            border-left: 4px solid var(--completed);
+        }
+
+        .notification.error {
+            background: rgba(255, 77, 77, 0.9);
+            border-left: 4px solid var(--pending);
+        }
+
+        .notification.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        
+        .notification.fade-out {
+            transform: translateX(400px);
+            opacity: 0;
+        }
+
+        .deadline-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .deadline-urgent {
+            color: var(--pending);
+        }
+
+        .deadline-soon {
+            color: #ffa500;
+        }
+
+        .deadline-ok {
+            color: var(--completed);
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .floating-element {
+            position: fixed;
+            width: 100px;
+            height: 100px;
+            background: rgba(0, 255, 136, 0.1);
+            border-radius: 50%;
+            z-index: -1;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            25% { transform: translate(-20px, -20px); }
+            50% { transform: translate(20px, 20px); }
+            75% { transform: translate(-20px, 20px); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .materials-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .material-buttons {
+                flex-direction: column;
+            }
+            
+            .modal-content {
+                margin: 10% auto;
+                width: 95%;
+            }
+
+            .logo {
+                gap: 10px;
+                font-size: 1.4rem;
+            }
+            
+            .nav-buttons {
+                display: none;
+            }
+            
+            .notification {
+                max-width: calc(100vw - 40px);
+                right: 20px;
+                left: 20px;
+                top: 70px;
+                padding: 0.8rem 1rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating background elements -->
+    <div class="floating-element" style="top: 10%; left: 5%;"></div>
+    <div class="floating-element" style="top: 60%; right: 10%; width: 150px; height: 150px;"></div>
+    <div class="floating-element" style="top: 30%; right: 20%; width: 80px; height: 80px;"></div>
+    
+    <header>
+        <div class="logo">
+            <i class="fas fa-book-reader"></i>
+            <span>VisioLearn Materials</span>
+        </div>
+        <div class="nav-buttons">
+            <button class="nav-btn" onclick="window.location.href='/'">
+                <i class="fas fa-home"></i> Home
+            </button>
+            <button class="nav-btn" onclick="window.location.href='/scheduler.html'">
+                <i class="fas fa-calendar"></i> Schedule
+            </button>
+            <button class="nav-btn" onclick="window.location.href='/dashboard.html'">
+                <i class="fas fa-chart-line"></i> Dashboard
+            </button>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="hero">
+            <h1>Your Study Materials</h1>
+            <p>Upload, organize, and transform your learning materials into interactive experiences</p>
+            
+            <div class="upload-area" id="uploadArea">
+                <div class="upload-icon">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                </div>
+                <div class="upload-text">Drop your files here or click to browse</div>
+                <div class="upload-subtext">Supports PDF, DOCX, TXT, PY, and more</div>
+                <input type="file" id="fileInput" class="file-input" multiple accept=".pdf,.docx,.doc,.txt,.py,.js,.html,.css,.json,.xml,.md,.rtf">
+            </div>
+        </div>
+        
+        <div class="materials-grid" id="materialsGrid">
+            <!-- Materials will be dynamically inserted here -->
+        </div>
+        
+        <button class="add-material-btn" onclick="addMaterial()" title="Add New Material">
+            <i class="fas fa-plus"></i>
+        </button>
+    </div>
+
+    <!-- Material Modal -->
+    <div class="modal" id="materialModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle">Add New Material</h2>
+                <button class="close-modal" id="closeModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="materialForm">
+                <div class="form-group">
+                    <label class="form-label" for="materialTitle">Title</label>
+                    <input type="text" id="materialTitle" class="form-control" placeholder="Enter material title" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="materialType">Type</label>
+                    <select id="materialType" class="form-control" required>
+                        <option value="theory">Theory</option>
+                        <option value="diagram">Diagrammatic</option>
+                        <option value="problem">Problematic</option>
+                        <option value="code">Programming</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="materialContent">Content</label>
+                    <textarea id="materialContent" class="form-control" placeholder="Enter or paste your material content" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="materialDeadline">Deadline</label>
+                    <input type="date" id="materialDeadline" class="form-control" required>
+                </div>
+                <div class="modal-buttons">
+                    <button type="button" class="btn btn-secondary" id="cancelBtn">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Material</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- File Upload Configuration Modal -->
+    <div class="modal" id="fileUploadModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Configure Uploaded File</h2>
+                <button class="close-modal" id="closeFileModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="fileUploadForm">
+                <div class="form-group">
+                    <label class="form-label" for="fileTitle">Title</label>
+                    <input type="text" id="fileTitle" class="form-control" placeholder="Enter material title" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="fileType">Type</label>
+                    <select id="fileType" class="form-control" required>
+                        <option value="theory">Theory</option>
+                        <option value="diagram">Diagrammatic</option>
+                        <option value="problem">Problematic</option>
+                        <option value="code">Programming</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="fileDeadline">Deadline</label>
+                    <input type="date" id="fileDeadline" class="form-control" required>
+                </div>
+                <div class="modal-buttons">
+                    <button type="button" class="btn btn-secondary" id="cancelFileBtn">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Material</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Include PDF.js and Mammoth.js for document parsing -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+
+    <script>
+        // DOM elements
+        const materialsGrid = document.getElementById('materialsGrid');
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const materialModal = document.getElementById('materialModal');
+        const fileUploadModal = document.getElementById('fileUploadModal');
+        const materialForm = document.getElementById('materialForm');
+        const fileUploadForm = document.getElementById('fileUploadForm');
+        const modalTitle = document.getElementById('modalTitle');
+        const closeModal = document.getElementById('closeModal');
+        const closeFileModal = document.getElementById('closeFileModal');
+        const cancelBtn = document.getElementById('cancelBtn');
+        const cancelFileBtn = document.getElementById('cancelFileBtn');
+
+        // State
+        let materials = [];
+        let editingMaterialId = null;
+        let pendingFileData = null;
+
+        // Load materials from localStorage
+        function loadMaterials() {
+            const savedMaterials = localStorage.getItem('materials');
+            if (savedMaterials) {
+                materials = JSON.parse(savedMaterials);
+            }
+    
+    const newCameraMaterial = localStorage.getItem('newCameraMaterial');
+    if (newCameraMaterial) {
+        const cameraMaterial = JSON.parse(newCameraMaterial);
+        
+        // Ensure camera material has content
+        if (!cameraMaterial.content) {
+            cameraMaterial.content = "Image-based content. View details to see visual material.";
+        }
+        
+        materials.push(cameraMaterial);
+        localStorage.removeItem('newCameraMaterial');
+        saveMaterials();
+    }
+    
+    renderMaterials();
+}
+        // Save materials to localStorage
+        function saveMaterials() {
+            localStorage.setItem('materials', JSON.stringify(materials));
+        }
+
+        // Update material progress based on completed tasks
+        function updateMaterialProgress() {
+            const learningSchedule = JSON.parse(localStorage.getItem('learningSchedule')) || [];
+            
+            materials.forEach(material => {
+                const materialTasks = learningSchedule.filter(task => 
+                    task.materialId === material.id && task.type !== 'revision'
+                );
+                
+                if (materialTasks.length > 0) {
+                    const completedTasks = materialTasks.filter(task => task.completed);
+                    const progressPercentage = Math.round((completedTasks.length / materialTasks.length) * 100);
+                    material.progress = progressPercentage;
+                }
+            });
+            
+            saveMaterials();
+        }
+
+        // Render materials grid
+        function renderMaterials() {
+            // Update progress before rendering
+            updateMaterialProgress();
+            
+            if (materials.length === 0) {
+                materialsGrid.innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 3rem; color: rgba(255,255,255,0.6);">
+                        <i class="fas fa-book-open" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+                        <h3>No materials yet</h3>
+                        <p>Upload your first study material to get started</p>
+                    </div>
+                `;
+                return;
+            }
+
+            materialsGrid.innerHTML = materials.map(material => {
+                const deadline = new Date(material.deadline);
+                const today = new Date();
+                const daysUntilDeadline = Math.ceil((deadline - today) / (1000 * 60 * 60 * 24));
+                
+                let deadlineClass = 'deadline-ok';
+                let deadlineText = `${daysUntilDeadline} days left`;
+                
+                if (daysUntilDeadline < 0) {
+                    deadlineClass = 'deadline-urgent';
+                    deadlineText = `${Math.abs(daysUntilDeadline)} days overdue`;
+                } else if (daysUntilDeadline <= 3) {
+                    deadlineClass = 'deadline-urgent';
+                } else if (daysUntilDeadline <= 7) {
+                    deadlineClass = 'deadline-soon';
+                }
+
+                return `
+                    <div class="material-card">
+                        <div class="material-header">
+                            <div>
+                                <h3 class="material-title">${material.title}</h3>
+                                <span class="material-type">${material.type}</span>
+                                <div class="deadline-info ${deadlineClass}">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    <span>${deadlineText}</span>
+                                </div>
+                            </div>
+                            <div class="material-actions">
+                                <button class="action-btn" onclick="editMaterial(${material.id})" title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="action-btn delete" onclick="deleteMaterial(${material.id})" title="Delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="material-content">
+                           
+                    ${material.content ? 
+                      material.content.substring(0, 150) + 
+                      (material.content.length > 150 ? '...' : '') : 
+                      'No content available'}
+                            </div>
+                        
+                        <div class="material-footer">
+                            <div class="progress-container">
+                                <div class="progress-label">Progress: ${material.progress || 0}%</div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: ${material.progress || 0}%"></div>
+                                </div>
+                            </div>
+                            <div class="material-buttons">
+                                <button class="btn btn-secondary" onclick="startLearning(${material.id})">
+                                    <i class="fas fa-play"></i> Learn
+                                </button>
+                                <button class="btn btn-primary" onclick="scheduleStudy(${material.id})">
+                                    <i class="fas fa-calendar-plus"></i> Schedule
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Show notification
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => notification.classList.add('show'), 100);
+            setTimeout(() => {
+                notification.classList.add('fade-out');
+                notification.classList.remove('show');
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        // Delete material
+        function deleteMaterial(id) {
+            if (confirm('Are you sure you want to delete this material?')) {
+                materials = materials.filter(m => m.id !== id);
+                
+                // Also remove from learning schedule
+                const learningSchedule = JSON.parse(localStorage.getItem('learningSchedule')) || [];
+                const updatedSchedule = learningSchedule.filter(segment => segment.materialId !== id);
+                localStorage.setItem('learningSchedule', JSON.stringify(updatedSchedule));
+                
+                saveMaterials();
+                renderMaterials();
+                showNotification('Material deleted successfully!', 'success');
+            }
+        }
+
+        // Edit material
+        function editMaterial(id) {
+            const material = materials.find(m => m.id === id);
+            if (!material) return;
+
+            editingMaterialId = id;
+            modalTitle.textContent = 'Edit Material';
+            
+            document.getElementById('materialTitle').value = material.title;
+            document.getElementById('materialType').value = material.type;
+            document.getElementById('materialContent').value = material.content;
+            document.getElementById('materialDeadline').value = material.deadline;
+            
+            materialModal.style.display = 'block';
+        }
+
+        // Start learning
+        function startLearning(id) {
+            const material = materials.find(m => m.id === id);
+            if (!material) return;
+
+            // Store material for learning page
+            localStorage.setItem('currentLearningMaterial', JSON.stringify(material));
+            
+            // Redirect to learning page
+            window.location.href = 'shorts.html';
+        }
+
+        // Schedule study
+        function scheduleStudy(id) {
+            const material = materials.find(m => m.id === id);
+            if (!material) return;
+
+            // Generate learning segments
+            const segments = generateLearningSegments(material);
+            
+            // Save to learning schedule
+            const existingSchedule = JSON.parse(localStorage.getItem('learningSchedule')) || [];
+            
+            // Remove existing segments for this material
+            const filteredSchedule = existingSchedule.filter(segment => segment.materialId !== id);
+            
+            // Add new segments
+            const updatedSchedule = [...filteredSchedule, ...segments];
+            localStorage.setItem('learningSchedule', JSON.stringify(updatedSchedule));
+            
+            showNotification(`Study schedule created with ${segments.length} learning segments!`, 'success');
+            
+            // Redirect to scheduler
+            setTimeout(() => {
+                window.location.href = 'scheduler.html';
+            }, 1500);
+        }
+
+        // Generate learning segments based on deadline
+        function generateLearningSegments(material) {
+            const today = new Date();
+            const deadline = new Date(material.deadline);
+            const totalDays = Math.ceil((deadline - today) / (1000 * 60 * 60 * 24));
+            
+            if (totalDays <= 0) {
+                return []; // No time left
+            }
+            
+            const segments = [];
+            
+            // Split content into sentences for equal distribution
+            const sentences = material.content.split(/[.!?]+/).filter(sentence => sentence.trim().length > 0);
+            
+            // Calculate sentences per day (equal distribution)
+            const sentencesPerDay = Math.ceil(sentences.length / totalDays);
+            
+            // Create segments for each day
+            for (let day = 0; day < totalDays; day++) {
+                const segmentDate = new Date(today);
+                segmentDate.setDate(today.getDate() + day);
+                
+                // Get sentences for this day
+                const startIndex = day * sentencesPerDay;
+                const endIndex = Math.min(startIndex + sentencesPerDay, sentences.length);
+                const daySentences = sentences.slice(startIndex, endIndex);
+                
+                // Skip if no sentences for this day
+                if (daySentences.length === 0) continue;
+                
+                // Reconstruct content for this day
+                const dayContent = daySentences.join('. ').trim() + '.';
+                
+                segments.push({
+                    id: Date.now() + day,
+                    materialId: material.id,
+                    materialTitle: material.title,
+                    materialType: material.type,
+                    title: `${material.title} - Day ${day + 1}`,
+                    content: dayContent,
+                    date: segmentDate.toISOString().split('T')[0],
+                    time: ['09:00', '14:00', '16:00', '19:00'][day % 4],
+                    completed: false,
+                    day: day + 1,
+                    duration: 30 + (day * 5), // Gradually increase duration
+                    objectives: [
+                        `Study ${daySentences.length} key concepts from ${material.title}`,
+                        `Review and understand the content thoroughly`,
+                        `Take notes on important points`,
+                        `Practice recall and comprehension`
+                    ],
+                    sentenceCount: daySentences.length,
+                    totalSentences: sentences.length
+                });
+            }
+            
+            return segments;
+        }
+
+        // Add new material
+        function addMaterial() {
+            editingMaterialId = null;
+            modalTitle.textContent = 'Add New Material';
+            materialForm.reset();
+            
+            // Set default deadline to 1 week from now
+            const defaultDeadline = new Date();
+            defaultDeadline.setDate(defaultDeadline.getDate() + 7);
+            document.getElementById('materialDeadline').value = defaultDeadline.toISOString().split('T')[0];
+            
+            materialModal.style.display = 'block';
+        }
+
+        // Handle form submission
+        materialForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const formData = {
+                title: document.getElementById('materialTitle').value,
+                type: document.getElementById('materialType').value,
+                content: document.getElementById('materialContent').value,
+                deadline: document.getElementById('materialDeadline').value
+            };
+
+            if (editingMaterialId) {
+                // Update existing material
+                const materialIndex = materials.findIndex(m => m.id === editingMaterialId);
+                if (materialIndex !== -1) {
+                    materials[materialIndex] = {
+                        ...materials[materialIndex],
+                        ...formData
+                    };
+                    showNotification('Material updated successfully!', 'success');
+                }
+            } else {
+                // Add new material
+                const newMaterial = {
+                    id: Date.now(),
+                    ...formData,
+                    progress: 0,
+                    filename: 'Manual Entry'
+                };
+                materials.push(newMaterial);
+                showNotification('Material added successfully!', 'success');
+            }
+
+            saveMaterials();
+            renderMaterials();
+            materialModal.style.display = 'none';
+        });
+
+        // Enhanced file content extraction for all document types
+        async function extractFileContent(file) {
+            const fileExtension = file.name.split('.').pop().toLowerCase();
+            
+            try {
+                switch (fileExtension) {
+                    case 'txt':
+                    case 'md':
+                    case 'py':
+                    case 'js':
+                    case 'html':
+                    case 'css':
+                    case 'json':
+                    case 'xml':
+                    case 'rtf':
+                        return await extractTextContent(file);
+                    
+                    case 'pdf':
+                        return await extractPDFContent(file);
+                    
+                    case 'docx':
+                    case 'doc':
+                        return await extractDocxContent(file);
+                    
+                    default:
+                        // Try to read as text for unknown file types
+                        try {
+                            return await extractTextContent(file);
+                        } catch (e) {
+                            return `File uploaded: ${file.name}\nContent extraction not supported for this file type. Please manually add content if needed.`;
+                        }
+                }
+            } catch (error) {
+                console.error('Error extracting content:', error);
+                return `File uploaded: ${file.name}\nContent extraction failed. Please add content manually.`;
+            }
+        }
+
+        // Extract text content from text-based files
+        function extractTextContent(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = (e) => resolve(e.target.result);
+                reader.onerror = (e) => reject(new Error('Failed to read text file'));
+                reader.readAsText(file);
+            });
+        }
+
+        // Extract content from PDF files using PDF.js
+        async function extractPDFContent(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = async (e) => {
+                    try {
+                        const typedArray = new Uint8Array(e.target.result);
+                        const pdf = await pdfjsLib.getDocument(typedArray).promise;
+                        let fullText = '';
+                        
+                        for (let i = 1; i <= pdf.numPages; i++) {
+                            const page = await pdf.getPage(i);
+                            const textContent = await page.getTextContent();
+                            const pageText = textContent.items.map(item => item.str).join(' ');
+                            fullText += pageText + '\n\n';
+                        }
+                        
+                        resolve(fullText.trim() || 'PDF content extracted but appears to be empty or image-based.');
+                    } catch (error) {
+                        reject(new Error('Failed to extract PDF content: ' + error.message));
+                    }
+                };
+                reader.onerror = () => reject(new Error('Failed to read PDF file'));
+                reader.readAsArrayBuffer(file);
+            });
+        }
+
+        // Extract content from DOCX files using Mammoth.js
+        async function extractDocxContent(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = async (e) => {
+                    try {
+                        const arrayBuffer = e.target.result;
+                        const result = await mammoth.extractRawText({ arrayBuffer });
+                        resolve(result.value || 'DOCX file processed but no text content found.');
+                    } catch (error) {
+                        reject(new Error('Failed to extract DOCX content: ' + error.message));
+                    }
+                };
+                reader.onerror = () => reject(new Error('Failed to read DOCX file'));
+                reader.readAsArrayBuffer(file);
+            });
+        }
+
+        // Handle file upload - MODIFIED TO EXTRACT ALL CONTENT TYPES
+        async function handleFileUpload(event) {
+            const files = Array.from(event.target.files);
+            
+            if (files.length === 0) return;
+            
+            // Process first file (for simplicity, handle one at a time)
+            const file = files[0];
+            
+            // Show loading notification
+            showNotification('Processing file... Please wait.', 'success');
+            
+            try {
+                // Extract content from the file
+                const extractedContent = await extractFileContent(file);
+                
+                // Store file data with extracted content
+                pendingFileData = {
+                    file: file,
+                    filename: file.name,
+                    extractedContent: extractedContent
+                };
+                
+                // Pre-fill the form with file name (without extension)
+                document.getElementById('fileTitle').value = file.name.replace(/\.[^/.]+$/, "");
+                
+                // Set default deadline to 1 week from now
+                const defaultDeadline = new Date();
+                defaultDeadline.setDate(defaultDeadline.getDate() + 7);
+                document.getElementById('fileDeadline').value = defaultDeadline.toISOString().split('T')[0];
+                
+                // Auto-detect file type based on extension
+                const fileExtension = file.name.split('.').pop().toLowerCase();
+                const typeSelect = document.getElementById('fileType');
+                
+                if (['py', 'js', 'html', 'css', 'json'].includes(fileExtension)) {
+                    typeSelect.value = 'code';
+                } else if (['pdf', 'docx', 'doc', 'txt', 'md'].includes(fileExtension)) {
+                    typeSelect.value = 'theory';
+                } else {
+                    typeSelect.value = 'theory'; // Default
+                }
+                
+                // Show the file upload configuration modal
+                fileUploadModal.style.display = 'block';
+                
+                showNotification('File processed successfully! Configure your material.', 'success');
+                
+            } catch (error) {
+                console.error('File processing error:', error);
+                showNotification('Error processing file: ' + error.message, 'error');
+            }
+        }
+
+        // Handle file upload form submission
+        fileUploadForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            if (!pendingFileData) return;
+            
+            const file = pendingFileData.file;
+            const formData = {
+                title: document.getElementById('fileTitle').value,
+                type: document.getElementById('fileType').value,
+                deadline: document.getElementById('fileDeadline').value
+            };
+            
+            // Use extracted content
+            addFileAsMaterial(file, pendingFileData.extractedContent, formData);
+            
+            // Close modal and reset
+            fileUploadModal.style.display = 'none';
+            pendingFileData = null;
+            fileUploadForm.reset();
+        });
+
+        // Helper function to add file as material with user configuration
+        function addFileAsMaterial(file, content, formData) {
+            const newMaterial = {
+                id: Date.now() + Math.random(),
+                title: formData.title,
+                type: formData.type,
+                content: content,
+                filename: file.name,
+                progress: 0,
+                deadline: formData.deadline
+            };
+            content: content || '',  // Ensure content exists
+            materials.push(newMaterial);
+            saveMaterials();
+            renderMaterials();
+            showNotification(`${file.name} uploaded and configured successfully!`, 'success');
+        }
+
+        // File upload handling
+        fileInput.addEventListener('change', handleFileUpload);
+        uploadArea.addEventListener('click', () => fileInput.click());
+
+        // Drag and drop
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            handleFileUpload({ target: { files: e.dataTransfer.files } });
+        });
+
+        // Modal controls for material modal
+        closeModal.addEventListener('click', () => {
+            materialModal.style.display = 'none';
+        });
+
+        cancelBtn.addEventListener('click', () => {
+            materialModal.style.display = 'none';
+        });
+
+        // Modal controls for file upload modal
+        closeFileModal.addEventListener('click', () => {
+            fileUploadModal.style.display = 'none';
+            pendingFileData = null;
+        });
+
+        cancelFileBtn.addEventListener('click', () => {
+            fileUploadModal.style.display = 'none';
+            pendingFileData = null;
+        });
+
+        // Close modals when clicking outside
+        materialModal.addEventListener('click', (e) => {
+            if (e.target === materialModal) {
+                materialModal.style.display = 'none';
+            }
+        });
+
+        fileUploadModal.addEventListener('click', (e) => {
+            if (e.target === fileUploadModal) {
+                fileUploadModal.style.display = 'none';
+                pendingFileData = null;
+            }
+        });
+
+        // Add material button (you can add this to your UI)
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'n' && e.ctrlKey) {
+                e.preventDefault();
+                addMaterial();
+            }
+        });
+
+        // Initialize and refresh materials every 5 seconds to catch progress updates
+        window.addEventListener('DOMContentLoaded', () => {
+            loadMaterials();
+            
+            // Refresh materials periodically to update progress
+            setInterval(() => {
+                renderMaterials();
+            }, 5000);
+        });
+
+        // Make functions globally available
+        window.deleteMaterial = deleteMaterial;
+        window.editMaterial = editMaterial;
+        window.startLearning = startLearning;
+        window.scheduleStudy = scheduleStudy;
+        window.addMaterial = addMaterial;
+    </script>
+</body>
+</html>

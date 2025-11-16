@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Progress Dashboard - VisioLearn</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
+    <style>
+        :root {
+            --primary: #6366f1;
+            --secondary: #a855f7;
+            --accent: #ec4899;
+            --dark: #0f172a;
+            --darker: #0a0f1f;
+            --neon: #00ff88;
+            --completed: #00cc66;
+            --pending: #ff4d4d;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--darker), var(--dark));
+            color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            margin-top: 80px;
+        }
+
+        /* Header Styles */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 2rem;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--neon), var(--primary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo i {
+            font-size: 2.2rem;
+        }
+
+        .bolt-logo {
+            width: 80px;
+            height: 80px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 50%;
+            box-shadow: 0 2px 10px rgba(255, 255, 255, 0.1);
+        }
+
+        .bolt-logo:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 20px rgba(255, 255, 255, 0.2);
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .back-btn:hover {
+            background: var(--neon);
+            color: var(--dark);
+        }
+
+        .dashboard-title {
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .dashboard-title h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, var(--neon), var(--primary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .dashboard-title p {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.7);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .dashboard-card {
+            background: rgba(30, 41, 59, 0.7);
+            border-radius: 20px;
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .card-header h2 {
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .card-header i {
+            color: var(--neon);
+        }
+
+        /* Charts */
+        .chart-container {
+            height: 300px;
+            position: relative;
+            margin-top: 1rem;
+        }
+
+        /* 3D Visualization */
+        #three-container {
+            width: 100%;
+            height: 300px;
+            border-radius: 15px;
+            overflow: hidden;
+            background: rgba(0, 0, 0, 0.2);
+            margin-top: 1rem;
+        }
+
+        /* Motivational Section */
+        .motivational-section {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 2rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 20px;
+            margin-top: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .motivational-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, 
+                rgba(99, 102, 241, 0.1), 
+                rgba(168, 85, 247, 0.1), 
+                rgba(236, 72, 153, 0.1));
+            z-index: -1;
+        }
+
+        .quote {
+            font-size: 1.8rem;
+            font-style: italic;
+            margin-bottom: 1.5rem;
+            max-width: 900px;
+            margin: 0 auto 2rem;
+            color: var(--neon);
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
+        }
+
+        .author {
+            font-size: 1.2rem;
+            opacity: 0.8;
+        }
+
+        .audio-controls {
+            margin-top: 2rem;
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .audio-btn {
+            background: var(--neon);
+            color: var(--dark);
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: all 0.3s;
+        }
+
+        .audio-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
+        }
+
+        /* Progress Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 1.2rem;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--neon);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 1100px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin-top: 70px;
+            }
+            
+            header {
+                padding: 1rem;
+            }
+            
+            .logo {
+                gap: 10px;
+                font-size: 1.4rem;
+            }
+            
+            .bolt-logo {
+                width: 50px;
+                height: 50px;
+            }
+            
+            .dashboard-title h1 {
+                font-size: 2rem;
+            }
+            
+            .dashboard-title p {
+                font-size: 1rem;
+            }
+            
+            .quote {
+                font-size: 1.4rem;
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .chart-container {
+                height: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <i class="fas fa-chart-line"></i>
+            <span>VisioLearn Dashboard</span>
+        </div>
+        <button class="back-btn" onclick="window.history.back()">
+            <i class="fas fa-arrow-left"></i> Back to Home
+        </button>
+    </header>
+
+    <div class="container">
+        <div class="dashboard-title">
+            <h1>Your Learning Progress Dashboard</h1>
+            <p>Track your consistency, completion rates, and progress toward your goals</p>
+        </div>
+
+        <div class="dashboard-grid">
+            <!-- Consistency Chart -->
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h2><i class="fas fa-calendar-check"></i> Study Consistency</h2>
+                </div>
+                <div class="chart-container">
+                    <canvas id="consistencyChart"></canvas>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">24</div>
+                        <div class="stat-label">Active Days</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">87%</div>
+                        <div class="stat-label">Consistency</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">4.2</div>
+                        <div class="stat-label">Avg. Hours/Day</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Material Completion -->
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h2><i class="fas fa-book-open"></i> Material Completion</h2>
+                </div>
+                <div class="chart-container">
+                    <canvas id="completionChart"></canvas>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">18</div>
+                        <div class="stat-label">Materials</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">65%</div>
+                        <div class="stat-label">Completed</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">3.2</div>
+                        <div class="stat-label">Avg. Rating</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Job-Specific Progress -->
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h2><i class="fas fa-briefcase"></i> Job-Specific Progress</h2>
+                </div>
+                <div class="chart-container">
+                    <canvas id="jobProgressChart"></canvas>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">12</div>
+                        <div class="stat-label">Skills Targeted</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">78%</div>
+                        <div class="stat-label">Progress</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">4</div>
+                        <div class="stat-label">Certifications</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3D Progress Visualization -->
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h2><i class="fas fa-cube"></i> 3D Progress Overview</h2>
+                </div>
+                <div id="three-container"></div>
+                <p style="text-align: center; margin-top: 1rem; opacity: 0.8;">
+                    Interactive 3D visualization of your learning journey
+                </p>
+            </div>
+
+            <!-- Motivational Section -->
+            <div class="motivational-section">
+                <div class="quote" id="quote">"The expert in anything was once a beginner."</div>
+                <div class="author" id="author">- Helen Hayes</div>
+                
+                <div class="audio-controls">
+                    <button class="audio-btn" id="playBtn">
+                        <i class="fas fa-play"></i>
+                    </button>
+                    <button class="audio-btn" id="nextBtn">
+                        <i class="fas fa-step-forward"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Motivational quotes data
+        const quotes = [
+            {
+                text: "The expert in anything was once a beginner.",
+                author: "Helen Hayes"
+            },
+            {
+                text: "Learning is not attained by chance, it must be sought for with ardor and diligence.",
+                author: "Abigail Adams"
+            },
+            {
+                text: "The beautiful thing about learning is that no one can take it away from you.",
+                author: "B.B. King"
+            },
+            {
+                text: "Education is the passport to the future, for tomorrow belongs to those who prepare for it today.",
+                author: "Malcolm X"
+            },
+            {
+                text: "The capacity to learn is a gift; the ability to learn is a skill; the willingness to learn is a choice.",
+                author: "Brian Herbert"
+            },
+            {
+                text: "Every skill you acquire doubles your odds of success.",
+                author: "Scott Adams"
+            },
+            {
+                text: "The more that you read, the more things you will know. The more that you learn, the more places you'll go.",
+                author: "Dr. Seuss"
+            },
+            {
+                text: "Success is no accident. It is hard work, perseverance, learning, studying, sacrifice and most of all, love of what you are doing.",
+                author: "Pelé"
+            }
+        ];
+        
+        // DOM Elements
+        const quoteElement = document.getElementById('quote');
+        const authorElement = document.getElementById('author');
+        const playBtn = document.getElementById('playBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        
+        // Speech Synthesis
+        let currentQuoteIndex = 0;
+        let isPlaying = false;
+        let speech = null;
+        
+        // Initialize Charts
+        function initCharts() {
+            // Consistency Chart
+            const consistencyCtx = document.getElementById('consistencyChart').getContext('2d');
+            new Chart(consistencyCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                    datasets: [{
+                        label: 'Study Hours',
+                        data: [35, 42, 38, 45, 50, 48, 52, 60, 65, 70, 68, 75],
+                        borderColor: 'rgba(0, 255, 136, 0.8)',
+                        backgroundColor: 'rgba(0, 255, 136, 0.2)',
+                        borderWidth: 3,
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                            titleColor: '#00ff88',
+                            bodyColor: 'white',
+                            borderColor: 'rgba(255, 255, 255, 0.1)',
+                            borderWidth: 1
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: 'rgba(255, 255, 255, 0.7)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: 'rgba(255, 255, 255, 0.7)'
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Completion Chart
+            const completionCtx = document.getElementById('completionChart').getContext('2d');
+            new Chart(completionCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Completed', 'In Progress', 'Not Started'],
+                    datasets: [{
+                        data: [65, 25, 10],
+                        backgroundColor: [
+                            'rgba(0, 255, 136, 0.8)',
+                            'rgba(99, 102, 241, 0.8)',
+                            'rgba(255, 255, 255, 0.2)'
+                        ],
+                        borderWidth: 0,
+                        hoverOffset: 15
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: 'rgba(255, 255, 255, 0.8)',
+                                padding: 20,
+                                font: {
+                                    size: 14
+                                }
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                            titleColor: '#00ff88',
+                            bodyColor: 'white',
+                            borderColor: 'rgba(255, 255, 255, 0.1)',
+                            borderWidth: 1
+                        }
+                    }
+                }
+            });
+            
+            // Job Progress Chart
+            const jobProgressCtx = document.getElementById('jobProgressChart').getContext('2d');
+            new Chart(jobProgressCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Programming', 'Data Analysis', 'AI Concepts', 'Cloud Computing', 'Networking', 'Security'],
+                    datasets: [{
+                        label: 'Skill Level',
+                        data: [85, 70, 65, 60, 75, 55],
+                        backgroundColor: 'rgba(99, 102, 241, 0.8)',
+                        borderColor: 'rgba(99, 102, 241, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                            titleColor: '#00ff88',
+                            bodyColor: 'white',
+                            borderColor: 'rgba(255, 255, 255, 0.1)',
+                            borderWidth: 1
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: 'rgba(255, 255, 255, 0.7)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                color: 'rgba(255, 255, 255, 0.7)',
+                                font: {
+                                    size: 12
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Initialize 3D Visualization
+        function init3DVisualization() {
+            const container = document.getElementById('three-container');
+            
+            // Create scene
+            const scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x0a0f1f);
+            
+            // Create camera
+            const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
+            camera.position.z = 5;
+            
+            // Create renderer
+            const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            container.appendChild(renderer.domElement);
+            
+            // Create floating cubes
+            const cubes = [];
+            const materials = [
+                new THREE.MeshBasicMaterial({ color: 0x6366f1, wireframe: true }),
+                new THREE.MeshBasicMaterial({ color: 0xa855f7, wireframe: true }),
+                new THREE.MeshBasicMaterial({ color: 0xec4899, wireframe: true }),
+                new THREE.MeshBasicMaterial({ color: 0x00ff88, wireframe: true })
+            ];
+            
+            // Create multiple cubes at random positions
+            for (let i = 0; i < 15; i++) {
+                const size = Math.random() * 0.5 + 0.2;
+                const geometry = new THREE.BoxGeometry(size, size, size);
+                const material = materials[Math.floor(Math.random() * materials.length)];
+                const cube = new THREE.Mesh(geometry, material);
+                
+                cube.position.x = (Math.random() - 0.5) * 8;
+                cube.position.y = (Math.random() - 0.5) * 8;
+                cube.position.z = (Math.random() - 0.5) * 8;
+                
+                cube.rotationSpeed = {
+                    x: Math.random() * 0.02,
+                    y: Math.random() * 0.02,
+                    z: Math.random() * 0.02
+                };
+                
+                scene.add(cube);
+                cubes.push(cube);
+            }
+            
+            // Add ambient light
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+            scene.add(ambientLight);
+            
+            // Add directional light
+            const directionalLight = new THREE.DirectionalLight(0x00ff88, 1);
+            directionalLight.position.set(1, 1, 1);
+            scene.add(directionalLight);
+            
+            // Animation function
+            function animate() {
+                requestAnimationFrame(animate);
+                
+                // Rotate cubes
+                cubes.forEach(cube => {
+                    cube.rotation.x += cube.rotationSpeed.x;
+                    cube.rotation.y += cube.rotationSpeed.y;
+                    cube.rotation.z += cube.rotationSpeed.z;
+                });
+                
+                renderer.render(scene, camera);
+            }
+            
+            // Handle window resize
+            window.addEventListener('resize', () => {
+                camera.aspect = container.clientWidth / container.clientHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(container.clientWidth, container.clientHeight);
+            });
+            
+            animate();
+        }
+        
+        // Update motivational quote
+        function updateQuote(index) {
+            const quote = quotes[index];
+            quoteElement.textContent = `"${quote.text}"`;
+            authorElement.textContent = `- ${quote.author}`;
+            currentQuoteIndex = index;
+        }
+        
+        // Speak current quote
+        function speakQuote() {
+            if (speech) {
+                window.speechSynthesis.cancel();
+            }
+            
+            const utterance = new SpeechSynthesisUtterance(
+                `${quotes[currentQuoteIndex].text} by ${quotes[currentQuoteIndex].author}`
+            );
+            utterance.rate = 1.0;
+            utterance.pitch = 1.0;
+            utterance.volume = 1.0;
+            
+            window.speechSynthesis.speak(utterance);
+            speech = utterance;
+            
+            // Update button icon
+            playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+            isPlaying = true;
+        }
+        
+        // Stop speaking
+        function stopSpeech() {
+            window.speechSynthesis.cancel();
+            playBtn.innerHTML = '<i class="fas fa-play"></i>';
+            isPlaying = false;
+        }
+        
+        // Event Listeners
+        playBtn.addEventListener('click', () => {
+            if (isPlaying) {
+                stopSpeech();
+            } else {
+                speakQuote();
+            }
+        });
+        
+        nextBtn.addEventListener('click', () => {
+            stopSpeech();
+            const nextIndex = (currentQuoteIndex + 1) % quotes.length;
+            updateQuote(nextIndex);
+            speakQuote();
+        });
+        
+        // Initialize dashboard
+        window.addEventListener('DOMContentLoaded', () => {
+            initCharts();
+            init3DVisualization();
+            updateQuote(0);
+            
+            // Auto-play the first quote
+            setTimeout(() => {
+                speakQuote();
+            }, 1500);
+        });
+    </script>
+</body>
+</html>

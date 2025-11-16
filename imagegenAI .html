@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Image Generator</title>
+    <style>
+
+        body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 30px;
+}
+
+.generator {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+}
+
+.controls {
+    flex: 1;
+    min-width: 300px;
+}
+
+.result {
+    flex: 1;
+    min-width: 300px;
+}
+
+textarea {
+    width: 100%;
+    height: 150px;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    margin-bottom: 20px;
+    resize: vertical;
+}
+
+.options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.option {
+    flex: 1;
+    min-width: 120px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+
+select, input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    transition: all 0.3s;
+}
+
+select {
+    cursor: pointer;
+    appearance: none;
+    background-color: white;
+    background-image: url('data:image/svg+xml;utf8,<svg fill="%23333" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 20px;
+    padding-right: 40px;
+}
+
+select:hover {
+    border-color: #3498db;
+    background-color: #f8f9fa;
+}
+
+select:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+}
+
+select option {
+    padding: 10px;
+}
+
+input:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+}
+
+button {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    width: 100%;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #2980b9;
+}
+
+.image-container {
+    width: 100%;
+    height: auto;
+    border: 1px dashed #ddd;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 300px;
+    overflow: hidden;
+}
+
+#generated-image {
+    max-width: 100%;
+    max-height: 100%;
+    display: none;
+}
+
+.loading {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 20px;
+}
+
+.spinner {
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #3498db;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+    margin-bottom: 15px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.error {
+    color: #e74c3c;
+    margin-top: 10px;
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .generator {
+        flex-direction: column;
+    }
+}
+
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>AI Image Generator</h1>
+        <div class="generator">
+            <div class="controls">
+                <textarea id="prompt" placeholder="Enter your image description here...">A cyberpunk city at night, illuminated by neon signs and holographic billboards. A lone figure in a futuristic trench coat walks through the rain-soaked streets, their face partially hidden by a glowing visor.</textarea>
+                
+                <div class="options">
+                    <div class="option">
+                        <label for="width">Width:</label>
+                        <select id="width">
+                            <option value="512">512px</option>
+                            <option value="768">768px</option>
+                            <option value="1024" selected>1024px</option>
+                        </select>
+                    </div>
+                    
+                    <div class="option">
+                        <label for="height">Height:</label>
+                        <select id="height">
+                            <option value="512">512px</option>
+                            <option value="768">768px</option>
+                            <option value="1024" selected>1024px</option>
+                        </select>
+                    </div>
+                    
+                    <div class="option">
+                        <label for="seed">Seed (optional):</label>
+                        <input type="number" id="seed" placeholder="Random">
+                    </div>
+                </div>
+                
+                <button id="generate-btn">Generate Image</button>
+            </div>
+            
+            <div class="result">
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                    <p>Generating your image...</p>
+                </div>
+                <div class="image-container" id="image-container">
+                    <img id="generated-image" alt="Generated image will appear here">
+                </div>
+                <div class="error" id="error"></div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+
+        document.addEventListener('DOMContentLoaded', function() {
+    const generateBtn = document.getElementById('generate-btn');
+    const promptInput = document.getElementById('prompt');
+    const widthSelect = document.getElementById('width');
+    const heightSelect = document.getElementById('height');
+    const seedInput = document.getElementById('seed');
+    const loadingElement = document.getElementById('loading');
+    const imageContainer = document.getElementById('image-container');
+    const generatedImage = document.getElementById('generated-image');
+    const errorElement = document.getElementById('error');
+    
+    generateBtn.addEventListener('click', generateImage);
+    
+    // Modify the generateImage function in script.js
+async function generateImage() {
+    // Reset UI
+    generatedImage.style.display = 'none';
+    errorElement.style.display = 'none';
+    loadingElement.style.display = 'flex';
+    const storedData = localStorage.getItem('newCameraMaterial');
+    console.log(storedData)
+
+if (storedData) {
+    const parsedData = JSON.parse(storedData);
+    const contentValue = parsedData.content;
+    console.log(contentValue)  
+    sendPrompt(contentValue);
+} 
+}
+    
+    function showError(message) {
+        loadingElement.style.display = 'none';
+        errorElement.textContent = message;
+        errorElement.style.display = 'block';
+    }
+
+   async function sendPrompt(prompt) {
+
+        if (!prompt) {
+        showError('Please enter a prompt');
+        return;
+    }
+    
+    const payload = {
+        prompt: prompt,
+        width: widthSelect.value,
+        height: heightSelect.value,
+        model: "flux"
+    };
+    
+    if (seedInput.value.trim()) {
+        payload.seed = seedInput.value.trim();
+    }
+    
+    const headers = {
+        "x-rapidapi-key": "bf15dae1c8mshd4a89c73f10c3d8p19f74ejsn26a5ee0689db",// HARSHINI API : 7c48b1d5f8msh008a27738b75873p1afe39jsn5717d1b33815        
+        "x-rapidapi-host": "ai-text-to-image-generator-flux-free-api.p.rapidapi.com",
+        "Content-Type": "application/x-www-form-urlencoded"
+    };
+    
+    try {
+        const response = await fetch("https://ai-text-to-image-generator-flux-free-api.p.rapidapi.com/aaaaaaaaaaaaaaaaaiimagegenerator/fluximagegenerate/generateimage.php", {
+            method: "POST",
+            headers: headers,
+            body: new URLSearchParams(payload)
+        });
+        
+        // Handle binary image response
+        const imageBlob = await response.blob();
+        const imageUrl = URL.createObjectURL(imageBlob);
+        
+        generatedImage.src = imageUrl;
+        generatedImage.style.display = 'block';
+        generatedImage.onload = function() {
+            loadingElement.style.display = 'none';
+            URL.revokeObjectURL(imageUrl); // Clean up memory
+        };
+        
+    } catch (error) {
+        showError('An error occurred: ' + error.message);
+    }
+
+    }
+});
+
+
+    </script>
+</body>
+</html>

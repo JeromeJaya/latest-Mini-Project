@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Object Detector</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        input[type="text"] {
+            width: 70%;
+            padding: 10px;
+            margin-right: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+
+        #preview {
+            max-width: 100%;
+            margin-top: 20px;
+            border-radius: 5px;
+        }
+
+        .object-item {
+            margin: 5px 0;
+            padding: 5px;
+            background-color: #e8e8e8;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Image Object Detector</h1>
+        <div class="input-group">
+            <input type="text" id="imageUrl" 
+                   placeholder="Enter image URL (e.g., https://example.com/image.jpg)">
+            <button onclick="detectObjects()">Analyze Image</button>
+        </div>
+        
+        <img id="preview" alt="Image preview">
+        
+        <div id="result"></div>
+    </div>
+
+    <script>
+        async function detectObjects() {
+            const apiKey = '7c48b1d5f8msh008a27738b75873p1afe39jsn5717d1b33815';
+            const apiHost = 'real-time-lens-data.p.rapidapi.com';
+            const imageUrl = document.getElementById('imageUrl').value;
+            const resultDiv = document.getElementById('result');
+            const previewImg = document.getElementById('preview');
+
+            if (!imageUrl) {
+                alert('Please enter an image URL');
+                return;
+            }
+
+            // Show preview image
+            previewImg.src = imageUrl;
+            
+            try {
+                resultDiv.innerHTML = 'Analyzing...';
+                
+                const encodedUrl = encodeURIComponent(imageUrl);
+                const apiUrl = `https://real-time-lens-data.p.rapidapi.com/object-detection?url=${encodedUrl}`;
+                
+                const response = await fetch(apiUrl, {
+                    method: 'GET',
+                    headers: {
+                        'x-rapidapi-key': apiKey,
+                        'x-rapidapi-host': apiHost
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`API request failed: ${response.status}`);
+                }
+
+                const data = await response.json();
+                
+                // Display results
+                if (data.detected_objects && data.detected_objects.length > 0) {
+                    resultDiv.innerHTML = `
+                        <h3>Detected Objects:</h3>
+                        ${data.detected_objects.map(obj => `
+                            <div class="object-item">
+                                ${obj.name} (${Math.round(obj.confidence * 100)}% confidence)
+                            </div>
+                        `).join('')}
+                    `;
+                } else {
+                    resultDiv.innerHTML = 'No objects detected';
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `Error: ${error.message}`;
+                console.error(error);
+            }
+        }
+    </script>
+</body>
+</html>
